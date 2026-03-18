@@ -27,6 +27,15 @@ It includes:
 
 ---
 
+## 🚀 Branch Introduction
+
+This project uses the following branches:
+
+- **main Branch** – Contains the main codebase and production-ready features
+- **test Branch** – Contains experimental features and testing code
+- **dev Branch** – Contains development of features 
+
+
 ## 📂 Directory Structure
 
 Here is an overview of the project's folder structure to help you navigate:
