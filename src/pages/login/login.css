@@ -1,7 +1,5 @@
-/* Only things Tailwind cannot do inline — the spinning ::after pseudo-element */
-
 @keyframes spin-ring {
-  from { transform: rotate(0deg)   translateX(50%); }
+  from { transform: rotate(0deg) translateX(50%); }
   to   { transform: rotate(360deg) translateX(50%); }
 }
 
