@@ -1,4 +1,13 @@
-import { ChevronDown, CircleUser, LogOutIcon, Pencil, SquarePen, ThumbsUpIcon, User, User2 } from "lucide-react";
+import {
+  ChevronDown,
+  CircleUser,
+  LogOutIcon,
+  Pencil,
+  SquarePen,
+  ThumbsUpIcon,
+  User,
+  User2,
+} from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
 
@@ -47,9 +56,9 @@ const NavBar = () => {
         </svg>
       </div>
 
-      <div className="flex space-x-6 items-center h-full">
+      <div className="flex items-center h-full text-black space-x-2 ">
         <NavLink
-          className="px-6 text-textYellow hover:text-bgYellow flex items-center justify-between"
+          className="px-2 hover:text-black/60 flex items-center justify-between font-semibold"
           to="/vastu-analysis"
         >
           Energy Vastu
@@ -57,22 +66,23 @@ const NavBar = () => {
         </NavLink>
 
         <div
-          className="px-6 text-textYellow hover:text-bgYellow flex items-center justify-between"
+          className="relative px-2 hover:text-black/60 flex items-center gap-1 cursor-pointer font-semibold"
           onClick={() => setShowReportsDropdown(!showReportsDropdown)}
           onMouseEnter={() => setShowReportsDropdown(true)}
           onMouseLeave={() => setShowReportsDropdown(false)}
         >
           Reports
-          <ChevronDown />
+          <ChevronDown size={18} />
           {showReportsDropdown && (
-            <div className="absolute top-full left-0 bg-black shadow-lg">
-              <ul className="list-disc pl-10 pr-4 py-1 text-left text-textYellow">
+            <div className="absolute top-full mt-3 w-64 rounded-xl px-5 py-3 bg-white text-black text-left shadow-lg shadow-black/20 border border-black/20">
+              <div className="absolute -top-2 w-4 h-4 rotate-45 bg-white"></div>
+              <ul className="flex flex-col text-sm font-medium">
                 <li>
                   <NavLink
-                    to="/vastu-reports"
-                    className="py-1 hover:text-bgYellow"
+                    to=""
+                    className="hover:text-black/60"
                   >
-                    Vastu Reports
+                    Energy Vastu
                   </NavLink>
                 </li>
               </ul>
@@ -87,21 +97,21 @@ const NavBar = () => {
           onMouseLeave={() => setShowProfileDropdown(false)}
         >
           <CircleUser size={32} />
-          <span>{name && name.length > 9 ? name.slice(0, 9) + "..." : name}</span>
+          <span>
+            {name && name.length > 9 ? name.slice(0, 9) + "..." : name}
+          </span>
 
           {showProfileDropdown && (
-            <div className="absolute right-0 top-full w-64 rounded-xl bg-white mt-2 p-4 z-50">
+            <div className="absolute right-0 top-full w-64 rounded-xl bg-white mt-3 p-4 z-50 shadow-lg shadow-black/20 border border-black/20">
               {/* Top Profile Info */}
-              <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rotate-45 bg-white"></div>
+              <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rotate-45 bg-white mx-4"></div>
               <div className="flex gap-3 items-center mb-3">
                 <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
                   <User size={24} />
                 </div>
 
                 <div className="flex items-start flex-col">
-                  <p className="font-semibold text-bgYellow">
-                    {name}
-                  </p>
+                  <p className="font-semibold text-bgYellow">{name}</p>
 
                   <div className="mt-1 inline-flex items-center gap-2 text-sm px-2 py-1 rounded-md border border-borderGreen text-borderGreen bg-borderGreen/10 font-mediumx">
                     <ThumbsUpIcon size={16} className="text-borderGreen" />
