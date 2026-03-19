@@ -1,10 +1,16 @@
 import React from 'react'
+import CustomInput from '../../components/CustomInput'
+import BreadcrumbNav from '@/src/components/BreadCrumNav'
+import CustomAnalysisComponent from '@/src/components/CustomAnalysisComponent'
 
 const VastuAnalysis: React.FC = () => {
+  
   return (
-    <div>
-      <h1>Vastu Analysis</h1>
-    </div>
+    <section>
+      <BreadcrumbNav items={[{ label: 'Vastu Analysis' }]} />
+      <CustomAnalysisComponent />
+      <CustomInput />
+    </section>
   )
 }
 
