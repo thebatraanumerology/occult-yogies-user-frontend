@@ -1,10 +1,12 @@
 import './App.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Login from './pages/login/Login'
-import VastuAnalysis from './pages/energy-vastu/VastuAnalysis'
+import Login from './pages/login/login'
+import VastuAnalysis from './pages/energy-vastu'
 import Home from './pages/home/Home'
 import LoginLayout from './layout/LoginLayout'
 import DefaultLayout from './layout/DefaultLayout'
+import EnergyVastuAnalyse from './pages/energy-vastu/analyse'
+import EnergyVastuList from './pages/energy-vastu/list'
 
 const App : React.FC = () => {
   return (
@@ -16,7 +18,9 @@ const App : React.FC = () => {
 
         <Route element={<DefaultLayout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/vastu-analysis" element={<VastuAnalysis />} />
+          <Route path="/energy-vastu" element={<VastuAnalysis />} />
+          <Route path="/energy-vastu/:id" element={<EnergyVastuAnalyse />} />
+          <Route path="/list/energy-vastu" element={<EnergyVastuList />} />
         </Route>
       </Routes>
     </BrowserRouter>

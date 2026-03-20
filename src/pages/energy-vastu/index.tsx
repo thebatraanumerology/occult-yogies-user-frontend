@@ -20,7 +20,7 @@ const vastuPowerSchema = z.object({
 });
 
 
-const VastuAnalysis: React.FC = () => {
+const VastuAnalysisIndex: React.FC = () => {
 
    const { control, handleSubmit, reset, formState: { errors },} = useForm<z.infer<typeof vastuPowerSchema>>({
     resolver: zodResolver(vastuPowerSchema),  
@@ -53,7 +53,7 @@ const VastuAnalysis: React.FC = () => {
       <BreadcrumbNav items={[{ label: "Vastu Analysis" }]} />
       <CustomAnalysisComponent
         title="Vastu Energy Analysis"
-        reportListHref="/vastu/reports"
+        reportListHref="/list/energy-vastu"
         footerButtons={[
           { label: "Reset", onClick: handleReset, variant: "outline" },
           { label: "Save & Submit", onClick: () => handleSubmit(onSubmit)(), variant: "primary" },
@@ -156,4 +156,4 @@ const VastuAnalysis: React.FC = () => {
   );
 };
 
-export default VastuAnalysis;
+export default VastuAnalysisIndex;
