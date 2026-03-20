@@ -1,0 +1,50 @@
+export interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+export interface BreadcrumbNavProps {
+  items: BreadcrumbItem[];
+  onNavigate?: (href: string) => void;
+}
+
+export type InputVariant = "text" | "date" | "select" | "gender";
+ 
+
+export interface SelectOption {
+  label: string;
+  value: string;
+}
+ 
+export interface CustomInputProps {
+  label: string;
+  required?: boolean;
+  variant?: InputVariant;
+  placeholder?: string;
+  value?: string | Date | null;
+  onChange?: (value: string) => void;
+  options?: SelectOption[];            
+  genderOptions?: string[];           
+  className?: string;
+  error?: string;
+}
+
+export interface ActionButton {
+  label: string;
+  onClick: () => void;
+  variant?: "primary" | "outline";
+}
+
+export interface CustomAnalysisComponentProps {
+  children?: React.ReactNode;
+  title: string; 
+  reportListHref?: string; 
+  onReportList?: () => void; 
+  footerButtons?: ActionButton[]; 
+}
+
+export interface CustomDateInputProps {
+  value?: Date | null;
+  onChange?: (date: Date | null) => void;
+  placeholder?: string;
+}

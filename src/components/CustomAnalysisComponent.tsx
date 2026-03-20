@@ -1,18 +1,6 @@
 import { FileText, Layers } from "lucide-react";
+import { CustomAnalysisComponentProps } from "../types/componentTypes";
 
-interface ActionButton {
-  label: string;
-  onClick: () => void;
-  variant?: "primary" | "outline";
-}
-
-interface CustomAnalysisComponentProps {
-  children?: React.ReactNode;
-  title: string; // dynamic heading
-  reportListHref?: string; // where Report List button redirects
-  onReportList?: () => void; // OR pass a callback (SPA navigation)
-  footerButtons?: ActionButton[]; // fully dynamic bottom buttons
-}
 
 const CustomAnalysisComponent: React.FC<CustomAnalysisComponentProps> = ({
   children,
@@ -32,7 +20,7 @@ const CustomAnalysisComponent: React.FC<CustomAnalysisComponentProps> = ({
   return (
     <section className="w-full h-full rounded-xl p-4 bg-white/50 border-4 border-lightYellow backdrop-blur-lg font-medium">
       {/* Header */}
-      <article className="flex items-center justify-between border-b-1 border-black/10 pb-2">
+      <article className="flex items-center justify-between border-b border-black/10 pb-2">
         <div className="flex items-center gap-2 ">
           <Layers className="text-magenta" />
           <h1 className="text-xl  text-black">{title}</h1>
