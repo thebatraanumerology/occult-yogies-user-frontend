@@ -1,14 +1,5 @@
 import { Home, Slash } from "lucide-react";
-
-export interface BreadcrumbItem {
-  label: string;
-  href?: string;
-}
-
-interface BreadcrumbNavProps {
-  items: BreadcrumbItem[];
-  onNavigate?: (href: string) => void;
-}
+import { BreadcrumbNavProps } from "../types/componentTypes";
 
 export default function BreadcrumbNav({ items, onNavigate }: BreadcrumbNavProps) {
   const handleClick = (href?: string) => {

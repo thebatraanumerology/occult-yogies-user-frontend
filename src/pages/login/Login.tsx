@@ -1,10 +1,5 @@
 import "./login.css";
-import { useForm } from "react-hook-form";
-import { Mail, Lock } from "lucide-react";
 import loginBg from "../../assets/login-bg.webp";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
 import SignIn from "./SignIn";
 import { useState } from "react";
 import ForgotPassword from "./ForgotPassword";
