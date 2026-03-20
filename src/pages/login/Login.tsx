@@ -13,7 +13,7 @@ const Login: React.FC = () => {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   return (
-    <div className="flex h-dvh font-outfit w-full">
+    <div className="flex h-dvh w-full">
       <section className="relative w-[55%] h-full flex items-center justify-center overflow-hidden">
         <img
           src={loginBg}
