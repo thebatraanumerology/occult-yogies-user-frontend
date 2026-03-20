@@ -1,10 +1,5 @@
 import "./login.css";
-import { useForm } from "react-hook-form";
-import { Mail, Lock } from "lucide-react";
 import loginBg from "../../assets/login-bg.webp";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
 import SignIn from "./SignIn";
 import { useState } from "react";
 import ForgotPassword from "./ForgotPassword";
@@ -13,7 +8,7 @@ const Login: React.FC = () => {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   return (
-    <div className="flex h-dvh font-outfit w-full">
+    <div className="flex h-dvh w-full">
       <section className="relative w-[55%] h-full flex items-center justify-center overflow-hidden">
         <img
           src={loginBg}
