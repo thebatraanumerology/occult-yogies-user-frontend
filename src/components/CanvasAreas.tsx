@@ -8,47 +8,64 @@ import {
 import { Stage, Layer, Image, Circle, Line, Text, Group } from "react-konva";
 import useImage from "use-image";
 import type Konva from "konva";
-import { CanvasAreaHandle } from "../types/vastuTypes";
+import { CanvasAreaHandle, CanvasAreaProps, CompassLabel, CompassLine, HistoryEntry, Pin } from "../types/vastuTypes";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
-interface Pin {
-  x: number;
-  y: number;
-  label: string;
-}
-
-interface CompassLine {
-  points: number[];
-  stroke: string;
-  strokeWidth: number;
-  dash: number[];
-  opacity: number;
-}
-
-interface CompassLabel {
-  x: number;
-  y: number;
-  text: string;
-}
-
-interface HistoryEntry {
-  pins: Pin[];
-  polygonDrawn: boolean;
-}
-
-interface CanvasAreaProps {
-  mapUrl: string;
-  tool: "move" | "pin" | "tool";
-  division: number;
-  degree: number;
-  onPinsChange?: (pins: Pin[]) => void;
-}
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const DIRECTION_LABELS: Record<number, string[]> = {
   8: ["N", "NE", "E", "SE", "S", "SW", "W", "NW"],
-  16: ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW",],
-  32: ["N","NbE","NNE","NEbN","NE","NEbE","ENE","EbN","E","EbS","ESE","SEbE","SE","SEbS","SSE","SbE","S","SbW","SSW","SWbS","SW","SWbW","WSW","WbS","W","WbN","WNW","NWbW","NW","NWbN","NNW","NbW",],
+  16: [
+    "N",
+    "NNE",
+    "NE",
+    "ENE",
+    "E",
+    "ESE",
+    "SE",
+    "SSE",
+    "S",
+    "SSW",
+    "SW",
+    "WSW",
+    "W",
+    "WNW",
+    "NW",
+    "NNW",
+  ],
+  32: [
+    "N",
+    "NbE",
+    "NNE",
+    "NEbN",
+    "NE",
+    "NEbE",
+    "ENE",
+    "EbN",
+    "E",
+    "EbS",
+    "ESE",
+    "SEbE",
+    "SE",
+    "SEbS",
+    "SSE",
+    "SbE",
+    "S",
+    "SbW",
+    "SSW",
+    "SWbS",
+    "SW",
+    "SWbW",
+    "WSW",
+    "WbS",
+    "W",
+    "WbN",
+    "WNW",
+    "NWbW",
+    "NW",
+    "NWbN",
+    "NNW",
+    "NbW",
+  ],
 };
 
 const getPolygonCenter = (pins: Pin[]) => {
@@ -122,6 +139,34 @@ const buildCompass = (pins: Pin[], divisions: number, rotationDeg = 0) => {
   return { cx, cy, radius, lines, labels };
 };
 
+const computeGateRotation = (
+  pins: Pin[],
+  fromIdx: number,
+  toIdx: number,
+  degreeOffset: number
+): number => {
+  const center = getPolygonCenter(pins);
+  const fromPin = pins[fromIdx];
+  const toPin = pins[toIdx];
+  if (!fromPin || !toPin) return 0;
+ 
+  const midX = (fromPin.x + toPin.x) / 2;
+  const midY = (fromPin.y + toPin.y) / 2;
+ 
+  const wallDx = toPin.x - fromPin.x;
+  const wallDy = toPin.y - fromPin.y;
+  const isHorizontal = Math.abs(wallDx) >= Math.abs(wallDy);
+ 
+  let northAngle: number;
+  if (isHorizontal) {
+    northAngle = midY < center.y ? -90 : 90;
+  } else {
+    northAngle = midX > center.x ? 180 : 0;
+  }
+  const rotationNeeded = northAngle - (-90);
+  return rotationNeeded - degreeOffset;
+};
+
 // ─── Component ───────────────────────────────────────────────────────────────
 const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
   ({ mapUrl, tool, division, degree, onPinsChange }, ref) => {
@@ -138,9 +183,34 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
     const [history, setHistory] = useState<HistoryEntry[]>([
       { pins: [], polygonDrawn: false },
     ]);
+    const scaleRef = useRef(1);
+    const positionRef = useRef({ x: 0, y: 0 });
+    const pinsRef = useRef<Pin[]>([]);
+    const divisionRef = useRef(division);
+    const degreeRef = useRef(degree);
+    divisionRef.current = division;
+    degreeRef.current = degree;
+
 
     const W = containerRef.current?.clientWidth ?? 800;
     const H = 600;
+
+    const setScaleSync = (val: number | ((s: number) => number)) => {
+      setScale((prev) => {
+        const next = typeof val === "function" ? val(prev) : val;
+        scaleRef.current = next;
+        return next;
+      });
+    };
+    const setPositionSync = (val: { x: number; y: number }) => {
+      positionRef.current = val;
+      setPosition(val);
+    };
+
+    const setPinsSync = (newPins: Pin[]) => {
+      pinsRef.current = newPins;
+      setPins(newPins);
+    };
 
     const saveHistory = useCallback((newPins: Pin[], drawn: boolean) => {
       setHistory((prev) => [
@@ -158,67 +228,100 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
             if (h.length <= 1) return h;
             const prev = h[h.length - 2];
             setPins(prev.pins);
+            pinsRef.current = prev.pins;
             setPolygonDrawn(prev.polygonDrawn);
             return h.slice(0, -1);
           });
         },
         deleteAll() {
           setPins([]);
+          pinsRef.current = [];
           setPolygonDrawn(false);
           setCompassVisible(false);
           setCompassRotation(0);
-          setScale(1);
-          setPosition({ x: 0, y: 0 });
+          setScaleSync(1);
+          setPositionSync({ x: 0, y: 0 });
           setHistory([{ pins: [], polygonDrawn: false }]);
+           onPinsChange?.([]);
         },
-        zoomIn: () => setScale((s) => Math.min(s + 0.1, 5)),
-        zoomOut: () => setScale((s) => Math.max(s - 0.1, 0.3)),
+        zoomIn: () => setScaleSync((s) => Math.min(s + 0.1, 5)),
+        zoomOut: () => setScaleSync((s) => Math.max(s - 0.1, 0.3)),
         fitToScreen: () => {
-          setScale(1);
-          setPosition({ x: 0, y: 0 });
+          setScaleSync(1);
+          setPositionSync({ x: 0, y: 0 });
         },
         rotateLeft: () => setGlobalRotation((r) => r - 90),
         rotateRight: () => setGlobalRotation((r) => r + 90),
         drawCompass: () => {
           if (polygonDrawn) setCompassVisible(true);
         },
+
+        rotateCompassToGate(fromIdx: number, toIdx: number) {
+          if (!polygonDrawn) return;
+          const currentPins = pinsRef.current;
+          if (currentPins.length < 3) return;
+ 
+          const rotation = computeGateRotation(
+            currentPins,
+            fromIdx,
+            toIdx,
+            degreeRef.current
+          );
+          setCompassVisible(true);
+          setCompassRotation(rotation);
+        },
+
+
       }),
-      [polygonDrawn],
+      [polygonDrawn, onPinsChange],
     );
 
     // ── Stage click → place pin ──────────────────────────────────────────────
-    const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
-      if (tool !== "pin" || polygonDrawn) return;
-
-      const stage = stageRef.current!;
-      const pointer = stage.getPointerPosition()!;
-
-      // Transform screen coords → canvas coords (accounting for scale + pan)
-      const pos = {
-        x: (pointer.x - position.x) / scale,
-        y: (pointer.y - position.y) / scale,
-      };
-
-      if (pins.length >= 2) {
-        const dist = Math.sqrt(
-          (pos.x - pins[0].x) ** 2 + (pos.y - pins[0].y) ** 2,
-        );
-        if (dist < 20) {
-          setPolygonDrawn(true);
-          setCompassVisible(true);
-          saveHistory(pins, true);
+    const handleStageClick = useCallback(
+      (e: Konva.KonvaEventObject<MouseEvent>) => {
+        if (tool === "tool") {
+          if (pins.length >= 3) {
+            setPolygonDrawn(true);
+            setCompassVisible(true);
+            saveHistory(pins, true);
+          }
           return;
         }
-      }
+        if (tool !== "pin") return;
+        if (polygonDrawn) return;
 
-      const newPins = [
-        ...pins,
-        { x: pos.x, y: pos.y, label: `Pin ${pins.length + 1}` },
-      ];
-      setPins(newPins);
-      onPinsChange?.(newPins);
-      saveHistory(newPins, false);
-    };
+        const stage = stageRef.current!;
+        const pointer = stage.getPointerPosition()!;
+
+        const pos = {
+          x: (pointer.x - positionRef.current.x) / scaleRef.current,
+          y: (pointer.y - positionRef.current.y) / scaleRef.current,
+        };
+
+        const currentPins = pinsRef.current;
+
+        if (currentPins.length >= 2) {
+          const dist = Math.sqrt(
+            (pos.x - currentPins[0].x) ** 2 + (pos.y - currentPins[0].y) ** 2,
+          );
+          if (dist < 20) {
+            setPolygonDrawn(true);
+            setCompassVisible(true);
+            saveHistory(currentPins, true);
+            return;
+          }
+        }
+
+        const newPins = [
+          ...currentPins,
+          { x: pos.x, y: pos.y, label: `Pin ${currentPins.length + 1}` },
+        ];
+        setPinsSync(newPins);
+        onPinsChange?.(newPins);
+        saveHistory(newPins, false);
+      },
+      [tool, polygonDrawn, saveHistory, onPinsChange],
+    );
 
     // ── Wheel zoom ───────────────────────────────────────────────────────────
     const handleWheel = (e: Konva.KonvaEventObject<WheelEvent>) => {
@@ -235,8 +338,9 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
         e.evt.deltaY < 0
           ? Math.min(oldScale * scaleBy, 5)
           : Math.max(oldScale / scaleBy, 0.3);
+      scaleRef.current = newScale;
       setScale(newScale);
-      setPosition({
+      setPositionSync({
         x: pointer.x - mousePointTo.x * newScale,
         y: pointer.y - mousePointTo.y * newScale,
       });

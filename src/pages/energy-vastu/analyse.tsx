@@ -1,9 +1,9 @@
 import BreadcrumbNav from "@/src/components/BreadCrumNav";
 import CustomAnalysisComponent from "@/src/components/CustomAnalysisComponent";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { CanvasAreaHandle, UserDetail } from "@/src/types/vastuTypes";
 import CanvasToolbar from "@/src/components/CanvasToolBar";
-import CanvasArea from "@/src/components/CanvasAreas";
+import CanvasArea, { Pin } from "@/src/components/CanvasAreas";
 import mapBg from "@/src/assets/map.jpg";
 
 
@@ -20,6 +20,7 @@ const EnergyVastuAnalyse = () => {
   const [tool, setTool]       = useState<"move" | "pin" | "tool">("move");
   const [division, setDiv]    = useState(8);
   const [degree, setDegree]   = useState(0);
+  const [gateOptions, setGateOptions] = useState<string[]>([]);
   const canvasRef             = useRef<CanvasAreaHandle>(null);
 
   const [userDetails] = useState<UserDetail>({
@@ -37,6 +38,29 @@ const EnergyVastuAnalyse = () => {
     { label: "Date of Purchase", value: userDetails.dateOfPurchase },
     { label: "Address", value: userDetails.address},
   ];
+
+  const handlePinsChange = useCallback((pins: Pin[]) => {
+    if (pins.length < 2) {
+      setGateOptions([]);
+      return;
+    }
+    const options: string[] = [];
+    for (let i = 0; i < pins.length; i++) {
+      const to = (i + 1) % pins.length;
+      options.push(`A${i}-A${to}`);
+    }
+    setGateOptions(options);
+  }, []);
+
+   const handleGateChange = useCallback((value: string) => {
+    if (!value) return;
+    // value format: "A{from}-A{to}"
+    const match = value.match(/^A(\d+)-A(\d+)$/);
+    if (!match) return;
+    const fromIdx = parseInt(match[1], 10);
+    const toIdx   = parseInt(match[2], 10);
+    canvasRef.current?.rotateCompassToGate(fromIdx, toIdx);
+  }, []);
 
   return (
     <section className="w-[80%] mx-auto">
@@ -72,6 +96,8 @@ const EnergyVastuAnalyse = () => {
         onZoomIn={() => canvasRef.current?.zoomIn()}
         onZoomOut={() => canvasRef.current?.zoomOut()}
         onMaximize={() => canvasRef.current?.fitToScreen()}
+        gateOptions={gateOptions}
+        onGateChange={handleGateChange}
         />
 
          <div className="mt-4">
@@ -81,6 +107,7 @@ const EnergyVastuAnalyse = () => {
           tool={tool}
           division={division}
           degree={degree}
+          onPinsChange={handlePinsChange}
         />
       </div>
 

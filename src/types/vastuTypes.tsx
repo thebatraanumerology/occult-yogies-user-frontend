@@ -22,3 +22,48 @@ export interface CanvasToolbarProps {
   onDegreeChange?: (val: number) => void;
   gateOptions?: string[];
 }
+
+export interface CanvasAreaHandle {
+  undo: () => void;
+  deleteAll: () => void;
+  zoomIn: () => void;
+  zoomOut: () => void;
+  fitToScreen: () => void;
+  rotateLeft: () => void;
+  rotateRight: () => void;
+  drawCompass: () => void;
+  rotateCompassToGate: (fromIdx: number, toIdx: number) => void;
+}
+
+export interface Pin {
+  x: number;
+  y: number;
+  label: string;
+}
+
+export interface CompassLine {
+  points: number[];
+  stroke: string;
+  strokeWidth: number;
+  dash: number[];
+  opacity: number;
+}
+
+export interface CompassLabel {
+  x: number;
+  y: number;
+  text: string;
+}
+
+export interface HistoryEntry {
+  pins: Pin[];
+  polygonDrawn: boolean;
+}
+
+export interface CanvasAreaProps {
+  mapUrl: string;
+  tool: "move" | "pin" | "tool";
+  division: number;
+  degree: number;
+  onPinsChange?: (pins: Pin[]) => void;
+}
