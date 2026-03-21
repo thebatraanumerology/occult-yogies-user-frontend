@@ -189,7 +189,15 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
     // ── Stage click → place pin ──────────────────────────────────────────────
     const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
       if (tool !== "pin" || polygonDrawn) return;
-      const pos = e.target.getStage()!.getRelativePointerPosition()!;
+
+      const stage = stageRef.current!;
+      const pointer = stage.getPointerPosition()!;
+
+      // Transform screen coords → canvas coords (accounting for scale + pan)
+      const pos = {
+        x: (pointer.x - position.x) / scale,
+        y: (pointer.y - position.y) / scale,
+      };
 
       if (pins.length >= 2) {
         const dist = Math.sqrt(
@@ -197,6 +205,7 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
         );
         if (dist < 20) {
           setPolygonDrawn(true);
+          setCompassVisible(true);
           saveHistory(pins, true);
           return;
         }
