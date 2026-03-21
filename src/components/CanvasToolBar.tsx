@@ -38,11 +38,11 @@ const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
   const [showDivMenu, setShowDivMenu] = useState(false);
   const [degree, setDegree] = useState(0);
 
-  const btnBase =
-    "flex items-center p-1 gap-1 rounded-md border text-xs font-medium transition-all duration-150 cursor-pointer select-none";
-  const inactive =
-    "border-magenta text-magenta hover:bg-magenta/30";
-  const active = "border-magenta bg-magenta text-white";
+  const btnBase ="flex items-center p-1 gap-1 rounded-md border text-xs font-medium transition-all duration-150 cursor-pointer select-none";
+  const inactive ="border-magenta text-magenta hover:bg-magenta/30";
+  const active ="border-magenta bg-magenta text-white";
+  const navGroup ="flex items-center gap-1";
+  const navSection ="flex items-center gap-3";
 
   const handleTool = (tool: Tool, cb?: () => void) => {
     setActiveTool(tool);
@@ -51,10 +51,10 @@ const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
 
   return (
     <>
-      <div className="flex items-center justify-between">
+      <nav className="flex items-center justify-between">
         {/* Nav group */}
-        <article className="flex items-center justify-between">
-          <div className="flex items-center gap-1">
+        <article className={`${navSection}`}>
+          <div className={`${navGroup}`}>
             <button
               className={`${btnBase} ${activeTool === "move" ? active : inactive}`}
               onClick={() => handleTool("move", onMove)}
@@ -71,34 +71,29 @@ const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
           </div>
 
           {/* Tool + Division dropdown */}
-          <div className="flex items-center rounded-full border border-[#c9a0a0] overflow-visible bg-white">
+          <div className={`${navGroup}`}>
             <button
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#7a1040] hover:bg-[#fdf0f4] transition-all ${
-                activeTool === "tool" ? "bg-[#fdf0f4]" : ""
-              }`}
+              className={`${btnBase} ${activeTool === "tool" ? active : inactive}`}
               onClick={() => handleTool("tool", onTool)}
             >
               <Compass size={13} /> Tool
             </button>
-          </div>
 
-          {/* Division selector */}
-          <div>
             <div className="relative">
               <button
-                className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-[#7a1040] hover:bg-[#fdf0f4] transition-all"
+                className={`${btnBase} ${inactive}`}
                 onClick={() => setShowDivMenu((p) => !p)}
               >
                 {division} Div <ChevronDown size={11} />
               </button>
 
               {showDivMenu && (
-                <div className="absolute top-full left-0 mt-1 bg-white border border-[#c9a0a0] rounded-lg shadow-md z-50 overflow-hidden">
+                <div className="absolute my-1 bg-white border border-magenta rounded-md shadow-md z-10 overflow-hidden">
                   {DIVISIONS.map((d) => (
                     <button
                       key={d}
-                      className={`block w-full text-left px-4 py-1.5 text-xs hover:bg-[#fdf0f4] text-[#7a1040] ${
-                        division === d ? "font-bold bg-[#fdf0f4]" : ""
+                      className={`w-full text-left px-2 py-1 text-xs hover:bg-magenta/10 text-magenta ${
+                        division === d ? "font-bold bg-magenta/10" : ""
                       }`}
                       onClick={() => {
                         setDivision(d);
@@ -115,7 +110,7 @@ const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
           </div>
 
           {/* Edit group */}
-          <div>
+          <div className={`${navGroup}`}>
             <button className={`${btnBase} ${inactive}`} onClick={onUndo}>
               <Undo2 size={13} /> Undo
             </button>
@@ -126,7 +121,7 @@ const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
           </div>
 
           {/* View group */}
-          <div>
+          <div className={`${navGroup}`}>
             <button className={`${btnBase} ${inactive}`} onClick={onRotateLeft}>
               <RotateCcw size={13} /> Rotate Left
             </button>
@@ -152,10 +147,10 @@ const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
           </div>
         </article>
 
-        <article className="flex items-center gap-1">
+        <article className={`${navSection}`}>
           {/* Gate select */}
           <select
-            className="py-1 rounded-md border border-magenta text-xs text-magenta focus:outline-none cursor-pointer"
+            className={`${btnBase} ${inactive}`}
             onChange={(e) => onGateChange?.(e.target.value)}
             defaultValue=""
           >
@@ -185,7 +180,7 @@ const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
             />
           </div>
         </article>
-      </div>
+      </nav>
     </>
   );
 };
