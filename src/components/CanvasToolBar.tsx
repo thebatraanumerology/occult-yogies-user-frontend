@@ -154,11 +154,11 @@ const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
             onChange={(e) => onGateChange?.(e.target.value)}
             defaultValue=""
           >
-            <option value="" disabled>
+            <option value="" disabled className="bg-white">
               Select Side
             </option>
             {gateOptions.map((opt) => (
-              <option key={opt} value={opt}>
+              <option key={opt} value={opt} className="bg-white">
                 {opt}
               </option>
             ))}
