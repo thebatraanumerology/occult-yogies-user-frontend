@@ -30,7 +30,7 @@ const SignIn: React.FC<{ onForgotPassword: () => void }> = ({ onForgotPassword }
     
       
   return (
-     <article className="w-full text-white text-center max-w-md pr-12">
+     <article className="w-full text-white text-center max-w-md pr-12 bg-transparent">
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-4"
