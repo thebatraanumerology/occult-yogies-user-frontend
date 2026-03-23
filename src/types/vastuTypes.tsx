@@ -2,8 +2,9 @@ export interface UserDetail {
   name: string;
   phone: string;
   category: string;
-  dateOfPurchase: string;
-  address: string;
+  dateOfPurchase?: string;
+  address?: string;
+  map: string;
 }
 
 export interface CanvasToolbarProps {

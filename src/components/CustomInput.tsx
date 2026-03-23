@@ -2,6 +2,7 @@ import React from "react";
 import { CustomInputProps } from "../types/componentTypes";
 import { Mars, Venus, VenusAndMars } from "lucide-react";
 import CustomDatePicker from "./CustomDatePicker";
+import CustomFileInput from "./CustomFileInput";
 
 const CustomInput: React.FC<CustomInputProps> = ({
   label,
@@ -86,6 +87,15 @@ const CustomInput: React.FC<CustomInputProps> = ({
             })}
           </div>
         );
+
+      case "file":
+        return (
+          <CustomFileInput
+            accept="image/*"
+            onChange={(file) => console.log(file)}
+          />
+        );
+
 
       default:
         return (

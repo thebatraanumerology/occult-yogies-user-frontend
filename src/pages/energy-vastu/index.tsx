@@ -17,6 +17,7 @@ const vastuPowerSchema = z.object({
   address: z.string().optional(),
   category: z.string().min(1, "Category is required"),
   dateOfPurchase: z.string().optional(),
+  map: z.string().optional(),
 });
 
 
@@ -143,6 +144,20 @@ const VastuAnalysisIndex: React.FC = () => {
                 <CustomInput
                   label="Date of Purchase"
                   variant="date"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+
+            <Controller
+              name="map"
+              control={control}
+              render={({ field }) => (
+                <CustomInput
+                  label="Upload Map"
+                  variant="file"
+                  required
                   value={field.value}
                   onChange={field.onChange}
                 />

@@ -1,3 +1,5 @@
+import { file } from "zod";
+
 export interface BreadcrumbItem {
   label: string;
   href?: string;
@@ -8,7 +10,7 @@ export interface BreadcrumbNavProps {
   onNavigate?: (href: string) => void;
 }
 
-export type InputVariant = "text" | "date" | "select" | "gender";
+export type InputVariant = "text" | "date" | "select" | "gender" | "file";
  
 
 export interface SelectOption {
@@ -47,4 +49,9 @@ export interface CustomDateInputProps {
   value?: Date | null;
   onChange?: (date: Date | null) => void;
   placeholder?: string;
+}
+
+export interface CustomFileInputProps {
+  accept?: string;
+  onChange?: (file: File | null) => void;
 }
