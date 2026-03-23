@@ -31,7 +31,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
       case "date":
         return (
           <CustomDatePicker
-            value={value ? new Date(value) : null}
+            value={value && typeof value !== 'object' ? new Date(value) : (value instanceof Date ? value : null)}
             onChange={(date) =>
               onChange?.(date ? date.toISOString().split("T")[0] : "")
             }
@@ -88,11 +88,12 @@ const CustomInput: React.FC<CustomInputProps> = ({
           </div>
         );
 
+         
+
       case "file":
         return (
           <CustomFileInput
-            accept="image/*"
-            onChange={(file) => console.log(file)}
+            onChange={(file) => onChange?.(file)}
           />
         );
 

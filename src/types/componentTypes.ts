@@ -23,8 +23,8 @@ export interface CustomInputProps {
   required?: boolean;
   variant?: InputVariant;
   placeholder?: string;
-  value?: string | Date | null;
-  onChange?: (value: string) => void;
+  value?: string | Date | null | File;
+  onChange?: (value: string | File | null) => void;
   options?: SelectOption[];            
   genderOptions?: string[];           
   className?: string;

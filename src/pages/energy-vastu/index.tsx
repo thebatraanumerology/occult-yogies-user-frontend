@@ -17,7 +17,7 @@ const vastuPowerSchema = z.object({
   address: z.string().optional(),
   category: z.string().min(1, "Category is required"),
   dateOfPurchase: z.string().optional(),
-  map: z.string().optional(),
+  map: z.instanceof(File).optional(),
 });
 
 
