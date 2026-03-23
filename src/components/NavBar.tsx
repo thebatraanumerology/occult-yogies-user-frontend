@@ -5,7 +5,6 @@ import {
   SquarePen,
   ThumbsUpIcon,
   User,
-  ClipboardList,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
@@ -58,14 +57,26 @@ const REMEDIAL_ITEMS = [
   { label: "Remedial Reports", to: "/remedial" },
 ];
 
+const REPORT_ITEMS = [
+  { label: "Energy Vastu", to: "/list/energy-vastu" },
+];
+
 // ─── Reusable dropdown nav item ───────────────────────────────────────────────
 interface DropdownNavProps {
   label: string;
   items: { label: string; to: string }[];
   caretLeft?: string; // tailwind left offset for the caret triangle
+  showBullets?: boolean;
+  buttonClassName?: string;
 }
 
-const DropdownNav: React.FC<DropdownNavProps> = ({ label, items, caretLeft = "left-4" }) => {
+const DropdownNav: React.FC<DropdownNavProps> = ({
+  label,
+  items,
+  caretLeft = "left-4",
+  showBullets = false,
+  buttonClassName,
+}) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -74,7 +85,9 @@ const DropdownNav: React.FC<DropdownNavProps> = ({ label, items, caretLeft = "le
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
-      <button className={`${styles.navLink} ${open ? styles.navActive : ""}`}>
+      <button
+        className={`${buttonClassName ?? styles.navLink} ${open ? styles.navActive : ""}`}
+      >
         {label}
         <ChevronDown
           size={16}
@@ -91,10 +104,16 @@ const DropdownNav: React.FC<DropdownNavProps> = ({ label, items, caretLeft = "le
                 <NavLink
                   to={item.to}
                   className={({ isActive }) =>
-                    `hover:text-magenta transition-colors ${isActive ? "text-magenta" : "text-black"}`
+                    `flex items-center gap-2 hover:text-magenta transition-colors ${isActive ? "text-magenta" : "text-black"}`
                   }
                 >
-                  {item.label}
+                  {showBullets && (
+                    <span
+                      className="w-1.5 h-1.5 rounded-full bg-current inline-block"
+                      aria-hidden="true"
+                    />
+                  )}
+                  <span>{item.label}</span>
                 </NavLink>
               </li>
             ))}
@@ -125,13 +144,13 @@ const NavBar: React.FC = () => {
         <DropdownNav label="Vastu" items={ENERGY_VASTU_ITEMS} caretLeft="left-4" />
         {/* <DropdownNav label="Remedial" items={REMEDIAL_ITEMS} caretLeft="left-4" /> */}
 
-        <NavLink
-          to="/reports"
-          className="flex items-center gap-1 ml-2 p-2 px-4 rounded-lg bg-magenta text-lightYellow font-normal text-base hover:opacity-90 transition-opacity"
-        >
-          <ClipboardList size={16} />
-          Reports
-        </NavLink>
+        <DropdownNav
+          label="Reports"
+          items={REPORT_ITEMS}
+          caretLeft="left-6"
+          showBullets
+          buttonClassName="flex items-center gap-1 ml-2 p-2 px-4 rounded-lg bg-magenta text-lightYellow font-normal text-base hover:bg-magenta/50 transition-colors"
+        />
 
         {/* Profile dropdown */}
         <div
