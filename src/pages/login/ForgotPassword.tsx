@@ -15,6 +15,8 @@ const loginSchema = z.object({
 type LoginForm = z.infer<typeof loginSchema>;
 
 const ForgotPassword: React.FC<{ onForgotPassword: () => void }> = ({ onForgotPassword }) => {
+  const inputGroup = "flex h-12 rounded-md border border-lightYellow/40 overflow-hidden focus-within:border-lightYellow focus-within:ring-4 focus-within:ring-lightYellow/40 transition-all duration-200";
+  const input = "flex-1 bg-transparent px-3 text-white placeholder:text-white/40 outline-none focus:bg-transparent focus:ring-0";
 
     const navigate = useNavigate();
       const {
@@ -30,7 +32,7 @@ const ForgotPassword: React.FC<{ onForgotPassword: () => void }> = ({ onForgotPa
     
       
   return (
-     <article className="w-full text-white text-center max-w-md pr-12">
+     <div className="w-full text-white text-center max-w-md pr-12 bg-transparent">
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-4"
@@ -45,7 +47,7 @@ const ForgotPassword: React.FC<{ onForgotPassword: () => void }> = ({ onForgotPa
 
             {/* Email */}
             <div className="flex flex-col gap-1 text-left">
-              <div className="flex h-12 rounded-md border border-lightYellow overflow-hidden focus-within:ring-2 focus-within:ring-lightYellow">
+              <div className={inputGroup}>
                 <span className="flex items-center px-3">
                   <Mail size={18} className="text-lightYellow" />
                 </span>
@@ -53,7 +55,7 @@ const ForgotPassword: React.FC<{ onForgotPassword: () => void }> = ({ onForgotPa
                   type="email"
                   placeholder="Email ID"
                   {...register("email")}
-                  className="flex-1 bg-transparent px-3 text-white placeholder:text-white/40 outline-none"
+                  className={input}
                 />
               </div>
               {errors.email && (
@@ -81,7 +83,7 @@ const ForgotPassword: React.FC<{ onForgotPassword: () => void }> = ({ onForgotPa
             </div>
 
           </form>
-        </article>
+        </div>
   )
 }
 

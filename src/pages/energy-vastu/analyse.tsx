@@ -7,12 +7,12 @@ import CanvasArea, { Pin } from "@/src/components/CanvasAreas";
 import mapBg from "@/src/assets/map.jpg";
 
 
-const Field = ({ label, value }: { label: string; value: string }) => (
+const Field = ({ label, value }: { label: string; value?: string }) => (
   <div className="flex gap-1">
     <span className="text-sm font-semibold text-black whitespace-nowrap">
       {label} :
     </span>
-    <span className="text-sm font-normal text-black/90">{value}</span>
+    <span className="text-sm font-normal text-black/90">{value ?? ""}</span>
   </div>
 );
 
@@ -29,6 +29,7 @@ const EnergyVastuAnalyse = () => {
     category: "Residential",
     dateOfPurchase: "01-01-2023",
     address: "123 Main St, Anytown, USA",
+    map: mapBg,
   });
 
   const details = [

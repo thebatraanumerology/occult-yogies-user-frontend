@@ -5,6 +5,8 @@
 
 @custom-variant dark (&:is(.dark *));
 
+
+
 /* ─── Design Tokens ──────────────────────────────────────── */
 @theme {
   --font-outfit: 'Outfit Variable', sans-serif;
@@ -15,6 +17,11 @@
   --color-black:       #000000;
   --color-bg-secondary: #4c1628;
   --color-borderGreen: #198754;
+  --color-edit-blue: #0D6EFD;
+  --color-delete-red: #DC3545;
  
 }
 
+body, nav{
+  font-family: var(--font-outfit) !important;
+}

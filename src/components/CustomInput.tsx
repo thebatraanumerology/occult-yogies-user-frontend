@@ -2,6 +2,7 @@ import React from "react";
 import { CustomInputProps } from "../types/componentTypes";
 import { Mars, Venus, VenusAndMars } from "lucide-react";
 import CustomDatePicker from "./CustomDatePicker";
+import CustomFileInput from "./CustomFileInput";
 
 const CustomInput: React.FC<CustomInputProps> = ({
   label,
@@ -30,7 +31,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
       case "date":
         return (
           <CustomDatePicker
-            value={value ? new Date(value) : null}
+            value={value && typeof value !== 'object' ? new Date(value) : (value instanceof Date ? value : null)}
             onChange={(date) =>
               onChange?.(date ? date.toISOString().split("T")[0] : "")
             }
@@ -86,6 +87,16 @@ const CustomInput: React.FC<CustomInputProps> = ({
             })}
           </div>
         );
+
+         
+
+      case "file":
+        return (
+          <CustomFileInput
+            onChange={(file) => onChange?.(file)}
+          />
+        );
+
 
       default:
         return (

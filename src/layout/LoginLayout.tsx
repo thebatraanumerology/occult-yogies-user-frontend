@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom';
 
 const LoginLayout = () => {
   return (
-      <main>
+      <main className='font-outfit overflow-clip'>
         <Outlet />
       </main>
   );

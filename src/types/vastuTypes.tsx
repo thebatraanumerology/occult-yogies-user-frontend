@@ -2,8 +2,9 @@ export interface UserDetail {
   name: string;
   phone: string;
   category: string;
-  dateOfPurchase: string;
-  address: string;
+  dateOfPurchase?: string;
+  address?: string;
+  map: string;
 }
 
 export interface CanvasToolbarProps {
@@ -66,4 +67,25 @@ export interface CanvasAreaProps {
   division: number;
   degree: number;
   onPinsChange?: (pins: Pin[]) => void;
+}
+
+export type TableRow = Record<string, unknown>;
+export type ExportType = "copy" | "csv" | "excel" | "pdf" | "print";
+
+export interface TableColumn {
+  key: string;
+  label: string;
+  render?: (value: unknown, row: TableRow, rowIndex: number) => React.ReactNode;
+}
+
+export interface CustomTableProps {
+  title: string;
+  columns: TableColumn[];
+  data: TableRow[];
+  loading?: boolean;
+  onView?: (row: TableRow, rowIndex: number) => void;
+  onEdit?: (row: TableRow, rowIndex: number) => void;
+  onDelete?: (row: TableRow, rowIndex: number) => void;
+  onExport?: (type: ExportType) => void;
+  showActions?: boolean;
 }
