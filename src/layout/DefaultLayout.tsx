@@ -288,7 +288,7 @@ const DefaultLayout: React.FC = () => {
           </g>
         </svg>
       </div>
-      <main className="flex items-center pb-10 ">
+      <main className="flex items-center font-outfit pb-10 ">
         <Outlet />
       </main>
     </>
