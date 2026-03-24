@@ -1,3 +1,4 @@
+import "./login.scss";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,93 +15,96 @@ const loginSchema = z.object({
 });
 type LoginForm = z.infer<typeof loginSchema>;
 
-const SignIn: React.FC<{ onForgotPassword: () => void }> = ({ onForgotPassword }) => {
+const SignIn: React.FC<{ onForgotPassword: () => void }> = ({
+  onForgotPassword,
+}) => {
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginForm>({ resolver: zodResolver(loginSchema) });
 
-    const navigate = useNavigate();
-      const {
-        register,
-        handleSubmit,
-        formState: { errors },
-      } = useForm<LoginForm>({ resolver: zodResolver(loginSchema) });
-    
-      const onSubmit = (data: LoginForm) => {
-        console.log(data);
-        navigate("/");
-      };
-    
-      
+  const inputGroup = "flex h-12 rounded-md border border-lightYellow/40 overflow-hidden focus-within:border-lightYellow focus-within:ring-4 focus-within:ring-lightYellow/40 transition-all duration-200";
+  const input = "flex-1 bg-transparent px-3 text-white placeholder:text-white/40 outline-none focus:bg-transparent focus:ring-0";
+  const onSubmit = (data: LoginForm) => {
+    console.log(data);
+    navigate("/");
+  };
+
   return (
-     <article className="w-full text-white text-center max-w-md pr-12 bg-transparent">
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-4"
+    <div className="w-full text-white text-center">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <h1 className="text-3xl font-semibold text-lightYellow mb-2">
+          Sign in with email
+        </h1>
+
+        <p className="text-white text-sm mb-8">
+          Enter your credentials to access your account.
+        </p>
+
+        {/* Email */}
+        <div className="flex flex-col gap-1 text-left">
+          <div
+            className={`${inputGroup}`}
           >
-            <h1 className="text-3xl font-semibold text-lightYellow mb-2">
-              Sign in with email
-            </h1>
+            <span className="flex items-center px-3">
+              <Mail size={18} className="text-lightYellow" />
+            </span>
 
-            <p className="text-white text-sm mb-8">
-              Enter your credentials to access your account.
-            </p>
+            <input
+              type="email"
+              placeholder="Email ID"
+              {...register("email")}
+              className={`${input}`}
+            />
+          </div>
 
-            {/* Email */}
-            <div className="flex flex-col gap-1 text-left">
-              <div className="flex h-12 rounded-md border border-lightYellow overflow-hidden focus-within:ring-2 focus-within:ring-lightYellow">
-                <span className="flex items-center px-3">
-                  <Mail size={18} className="text-lightYellow" />
-                </span>
-                <input
-                  type="email"
-                  placeholder="Email ID"
-                  {...register("email")}
-                  className="flex-1 bg-transparent px-3 text-white placeholder:text-white/40 outline-none"
-                />
-              </div>
-              {errors.email && (
-                <p className="text-red-400 text-xs">{errors.email.message}</p>
-              )}
-            </div>
+          {errors.email && (
+            <p className="text-red-400 text-xs">{errors.email.message}</p>
+          )}
+        </div>
 
-            {/* Password */}
-            <div className="flex flex-col gap-1 text-left">
-              <div className="flex h-12 rounded-md border border-lightYellow overflow-hidden focus-within:ring-2 focus-within:ring-lightYellow">
-                <span className="flex items-center px-3">
-                  <Lock size={18} className="text-lightYellow" />
-                </span>
-                <input
-                  type="password"
-                  placeholder="Password"
-                  {...register("password")}
-                  className="flex-1 bg-transparent px-3 text-white placeholder:text-white/40 outline-none"
-                />
-              </div>
-              {errors.password && (
-                <p className="text-red-400 text-xs">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
-
-            {/* Forgot */}
-            <div
-              className="text-right"
-              onClick={(e) => {
-                e.preventDefault();
-                onForgotPassword();
-              }}
+        {/* Password */}
+        <div className="flex flex-col gap-1 text-left">
+          <div
+            className={`${inputGroup}`}
             >
-              <a className="text-lightYellow hover:underline">
-                Forgot Password?
-              </a>
-            </div>
+              <span className="flex items-center px-3">
+              <Lock size={18} className="text-lightYellow" />
+            </span>
 
-            {/* Button */}
-            <button className="w-full h-11 rounded-lg bg-bgYellow text-black font-semibold hover:bg-bgYellow/90">
-              Login Now
-            </button>
-          </form>
-        </article>
-  )
-}
+            <input
+              type="password"
+              placeholder="Password"
+              {...register("password")}
+              className={`${input}`}
+            />
+          </div>
+
+          {errors.password && (
+            <p className="text-red-400 text-xs">{errors.password.message}</p>
+          )}
+        </div>
+
+        {/* Forgot */}
+        <div
+          className="text-right"
+          onClick={(e) => {
+            e.preventDefault();
+            onForgotPassword();
+          }}
+        >
+          <a className="text-lightYellow hover:underline">Forgot Password?</a>
+        </div>
+
+        {/* Button */}
+        <button className="w-full h-11 rounded-lg bg-bgYellow text-black font-semibold hover:bg-bgYellow/90">
+          Login Now
+        </button>
+      </form>
+    </div>
+  );
+};
 
 export default SignIn;
