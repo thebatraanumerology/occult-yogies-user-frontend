@@ -54,3 +54,13 @@ export const postVastuAnalysis = async (data: any) => {
       throw error;
     }
   };
+
+ export const getVastuAnalysisByID = async (id: number) => {
+    try {
+      const response = await axios.get(`${BaseURL}/energy-vastu/analyse/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Get Vastu Analysis failed:", error);
+      throw error;
+    }
+  };
