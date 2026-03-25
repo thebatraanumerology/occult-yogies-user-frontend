@@ -1,10 +1,11 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CustomInput from "../../components/CustomInput";
 import BreadcrumbNav from "@/src/components/BreadCrumNav";
 import CustomAnalysisComponent from "@/src/components/CustomAnalysisComponent";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { getVastuCategories } from "@/src/services/energyVastu/VastuAPIFunctions";
 
 
 const vastuPowerSchema = z.object({
@@ -34,11 +35,8 @@ const VastuAnalysisIndex: React.FC = () => {
       dateOfPurchase: "",
     },
   });
+  const [categories, setCategories] = useState([]);
   const formRef = useRef<HTMLFormElement>(null);
-  const categories = [
-                    { label: "Residential", value: "residential" },
-                    { label: "Commercial", value: "commercial" },
-                  ];
  
   const onSubmit = (data: z.infer<typeof vastuPowerSchema>) => {
     console.log("Submitted:", data);
@@ -48,6 +46,23 @@ const VastuAnalysisIndex: React.FC = () => {
   const handleReset = () => {
     reset();
   };
+
+  const getCategories = async () => {
+    try {
+      const categories = await getVastuCategories();
+      const mapped = categories.data.map((cat: { id: number; catName: string }) => ({
+        value: cat.catName,
+        label: cat.catName,
+      }));
+      setCategories(mapped);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  useEffect(() => {
+    getCategories();
+  }, []);
 
   return (
     <section className="w-[80%] mx-auto">
