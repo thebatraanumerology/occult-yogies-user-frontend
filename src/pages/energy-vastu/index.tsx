@@ -5,7 +5,8 @@ import CustomAnalysisComponent from "@/src/components/CustomAnalysisComponent";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { getVastuCategories } from "@/src/services/energyVastu/VastuAPIFunctions";
+import { getVastuCategories, postVastuAnalysis } from "@/src/services/energyVastu/VastuAPIFunctions";
+import { useNavigate } from "react-router-dom";
 
 
 const vastuPowerSchema = z.object({
@@ -35,12 +36,16 @@ const VastuAnalysisIndex: React.FC = () => {
       dateOfPurchase: "",
     },
   });
+  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const formRef = useRef<HTMLFormElement>(null);
  
-  const onSubmit = (data: z.infer<typeof vastuPowerSchema>) => {
+  const onSubmit = async (data: z.infer<typeof vastuPowerSchema>) => {
     console.log("Submitted:", data);
-    
+    const response = await postVastuAnalysis(data);
+    console.log("Response:", response);
+    const id = response.data.id;
+    navigate(`/energy-vastu/${id}`);
   };
 
   const handleReset = () => {
@@ -173,8 +178,8 @@ const VastuAnalysisIndex: React.FC = () => {
                   label="Upload Map"
                   variant="file"
                   required
-                  value={field.value}
-                  onChange={field.onChange}
+                  onChange={(file) => field.onChange(file as File)}
+                  error={errors.map?.message}
                 />
               )}
             />
