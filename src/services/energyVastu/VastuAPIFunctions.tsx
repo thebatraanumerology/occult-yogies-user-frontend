@@ -69,9 +69,9 @@ export const getVastuAnalysisByID = async (id: number) => {
   }
 };
 
-export const getListData = async () => {
+export const getListData = async (page = 1) => {
   try {
-    const response = await axios.get(`${BaseURL}/energy-vastu/list`);
+    const response = await axios.get(`${BaseURL}/energy-vastu/list?page=${page}`);
     console.log("list repornse datA:: ",response.data);
     return response.data;
   } catch (error) {
