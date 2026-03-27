@@ -1,9 +1,16 @@
 import axios from "axios";
 import { BaseURL } from "../../constants/BaseURL";
+import Cookies from "js-cookie";
+
+const token = Cookies.get("oy_token");
 
 export const getVastuCategories = async () => {
   try {
-    const response = await axios.get(`${BaseURL}/energy-vastu/categories`);
+    const response = await axios.get(`${BaseURL}/energy-vastu/categories`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error(" Get Vastu Categories failed:", error);
@@ -47,6 +54,7 @@ export const postVastuAnalysis = async (data: any) => {
       {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -61,7 +69,11 @@ export const postVastuAnalysis = async (data: any) => {
 
 export const getVastuAnalysisByID = async (id: number) => {
   try {
-    const response = await axios.get(`${BaseURL}/energy-vastu/analyse/${id}`);
+    const response = await axios.get(`${BaseURL}/energy-vastu/analyse/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Get Vastu Analysis failed:", error);
@@ -71,7 +83,11 @@ export const getVastuAnalysisByID = async (id: number) => {
 
 export const getListData = async (page = 1) => {
   try {
-    const response = await axios.get(`${BaseURL}/energy-vastu/list?page=${page}`);
+    const response = await axios.get(`${BaseURL}/energy-vastu/list?page=${page}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     console.log("list repornse datA:: ",response.data);
     return response.data;
   } catch (error) {
@@ -82,7 +98,11 @@ export const getListData = async (page = 1) => {
 
 export const deleteVastuAnalysisRecordByID = async (id: number) => {
   try {
-    const response = await axios.delete(`${BaseURL}/energy-vastu/delete/${id}`);
+    const response = await axios.delete(`${BaseURL}/energy-vastu/delete/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Delete Vastu Analysis failed:", error);
