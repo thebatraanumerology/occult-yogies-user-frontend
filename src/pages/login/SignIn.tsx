@@ -35,7 +35,7 @@ const SignIn: React.FC<{ onForgotPassword: () => void }> = ({ onForgotPassword }
       const res = await doLogin(formData);       
       if (res.status) {
         login(res.data.user, res.data.token);   
-        navigate("/");
+        navigate("/energy-vastu");
       } else {
         setApiError(res.message ?? "Login failed. Please try again.");
       }
