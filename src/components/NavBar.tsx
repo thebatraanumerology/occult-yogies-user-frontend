@@ -6,9 +6,10 @@ import {
   ThumbsUpIcon,
   User,
 } from "lucide-react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import MobileNavBar from "./MobileNavBar";
 
 // ─── Centralised style tokens ─────────────────────────────────────────────────
 const styles = {
@@ -163,7 +164,7 @@ const NavBar: React.FC = () => {
       </div>
 
       {/* Right side */}
-      <div className="flex items-center gap-1 font-normal text-base">
+      <div className="hidden md:flex items-center gap-1 font-normal text-base">
         <DropdownNav
           label="Vastu"
           items={ENERGY_VASTU_ITEMS}
@@ -235,6 +236,13 @@ const NavBar: React.FC = () => {
           )}
         </div>
       </div>
+
+      <MobileNavBar
+        menuItems={[
+          { name: "Vastu", items: ENERGY_VASTU_ITEMS },
+          { name: "Reports", items: REPORT_ITEMS },
+        ]}
+      />
     </nav>
   );
 };
