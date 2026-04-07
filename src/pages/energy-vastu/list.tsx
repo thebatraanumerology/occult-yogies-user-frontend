@@ -120,8 +120,8 @@ const EnergyVastuList = () => {
       {pagination && pagination.last_page > 1 && (
         <div className="flex items-center justify-between mt-4 px-1">
           <p className="text-sm text-black/60">
-            {pagination.from ?? 0}–{pagination.to ?? 0} of{" "}
-            {pagination.total} records
+            {pagination.from ?? 0}–{pagination.to ?? 0} of {pagination.total}{" "}
+            records
           </p>
 
           <div className="flex items-center gap-1">
@@ -144,7 +144,10 @@ const EnergyVastuList = () => {
 
             {getPageNumbers().map((page, i) =>
               page === "…" ? (
-                <span key={`ellipsis-${i}`} className="w-8 text-center text-black/40 select-none">
+                <span
+                  key={`ellipsis-${i}`}
+                  className="w-8 text-center text-black/40 select-none"
+                >
                   …
                 </span>
               ) : (
@@ -161,7 +164,7 @@ const EnergyVastuList = () => {
                 >
                   {page}
                 </button>
-              )
+              ),
             )}
 
             {/* Next */}

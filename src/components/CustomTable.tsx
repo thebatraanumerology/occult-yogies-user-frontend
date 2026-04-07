@@ -9,6 +9,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { CustomTableProps, ExportType } from "../types/vastuTypes";
+import Tooltip from "./Tooltip";
 
 // ─── Button config ────────────────────────────────────────────────────────────
 const EXPORT_BUTTONS: {
@@ -90,14 +91,15 @@ const IconBtn: React.FC<{
   colorClass: string;
   onClick: () => void;
 }> = ({ icon, title, colorClass, onClick }) => (
-  <button
-    onClick={onClick}
-    title={title}
-    className={`w-8 h-8 flex items-center justify-center rounded-md text-white
+  <Tooltip title={title}>
+    <button
+      onClick={onClick}
+      className={`w-8 h-8 flex items-center justify-center rounded-md text-white
       transition-opacity duration-150 hover:opacity-85 active:opacity-70 cursor-pointer ${colorClass}`}
-  >
-    {icon}
-  </button>
+    >
+      {icon}
+    </button>
+  </Tooltip>
 );
 
 const CustomTable: React.FC<CustomTableProps> = ({
@@ -128,23 +130,29 @@ const CustomTable: React.FC<CustomTableProps> = ({
 
       <section className="w-full h-full rounded-xl p-4 bg-white/50 border-4 border-lightYellow backdrop-blur-lg font-medium">
         {/* Header: title + export buttons */}
-        <article className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <TableIcon />
-            <h2 className="font-semibold text-black text-2xl ">{title}</h2>
-            {!loading && (
-              <span className="text-lg font-normal text-black">
-                ({data.length})
-              </span>
-            )}
+        <article className="grid md:flex gap-3 items-center justify-between mb-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-2">
+            <div className="flex gap-1">
+              <TableIcon />
+              <h2 className="font-semibold text-black text-xl md:text-2xl ">
+                {title}
+
+                {!loading && (
+                  <span className="flex text-sm font-normal text-black">
+                    ({data.length} Records)
+                  </span>
+                )}
+              </h2>
+            </div>
           </div>
 
-          <div className="flex items-center gap-1 text-magenta">
+          <div className="flex flex-wrap items-center gap-1 text-magenta">
             {EXPORT_BUTTONS.map((btn) => (
               <button
                 key={btn.type}
                 onClick={() => handleExport(btn.type)}
-                className="flex items-center p-1 gap-1 rounded-md border text-xs font-medium transition-all duration-150 cursor-pointer select-none" >
+                className="flex items-center py-1 px-2 gap-1 rounded-md border text-xs font-medium transition-all duration-150 cursor-pointer select-none"
+              >
                 {btn.icon}
                 {btn.label}
               </button>
@@ -164,9 +172,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
                     {col.label}
                   </th>
                 ))}
-                {showActions && (
-                  <th className="w-32">Actions</th>
-                )}
+                {showActions && <th className="w-32">Actions</th>}
               </tr>
             </thead>
 
@@ -201,10 +207,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
                     </td>
 
                     {columns.map((col) => (
-                      <td
-                        key={col.key}
-                        className="p-1"
-                      >
+                      <td key={col.key} className="p-1">
                         {col.render
                           ? col.render(row[col.key], row, rowIndex)
                           : String(row[col.key] ?? "—")}
