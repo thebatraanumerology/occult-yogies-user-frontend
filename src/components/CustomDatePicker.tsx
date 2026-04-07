@@ -13,7 +13,7 @@ const CustomDatePicker: React.FC<CustomDateInputProps> = ({
     "w-full px-3 py-2 rounded-lg border border-black/10 bg-white text-sm placeholder:text-black/30 focus:outline-none focus:ring focus:ring-black/30 transition pr-10";
 
   return (
-    <div className="relative w-3/4 max-w-3/4 min-w-2/3">
+    <div className="relative lg:w-3/4 lg:max-w-3/4 min-w-2/3">
       <DatePicker
         selected={value}
         onChange={(date : Date | null) => onChange?.(date)}

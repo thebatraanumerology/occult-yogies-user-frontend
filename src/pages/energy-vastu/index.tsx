@@ -5,9 +5,11 @@ import CustomAnalysisComponent from "@/src/components/CustomAnalysisComponent";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { getVastuCategories, postVastuAnalysis } from "@/src/services/energyVastu/VastuAPIFunctions";
+import {
+  getVastuCategories,
+  postVastuAnalysis,
+} from "@/src/services/energyVastu/VastuAPIFunctions";
 import { useNavigate } from "react-router-dom";
-
 
 const vastuPowerSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -22,11 +24,14 @@ const vastuPowerSchema = z.object({
   map: z.instanceof(File).optional(),
 });
 
-
 const VastuAnalysisIndex: React.FC = () => {
-
-   const { control, handleSubmit, reset, formState: { errors },} = useForm<z.infer<typeof vastuPowerSchema>>({
-    resolver: zodResolver(vastuPowerSchema),  
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<z.infer<typeof vastuPowerSchema>>({
+    resolver: zodResolver(vastuPowerSchema),
     defaultValues: {
       fullName: "",
       gender: "Male",
@@ -39,7 +44,7 @@ const VastuAnalysisIndex: React.FC = () => {
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const formRef = useRef<HTMLFormElement>(null);
- 
+
   const onSubmit = async (data: z.infer<typeof vastuPowerSchema>) => {
     console.log("Submitted:", data);
     const response = await postVastuAnalysis(data);
@@ -55,10 +60,12 @@ const VastuAnalysisIndex: React.FC = () => {
   const getCategories = async () => {
     try {
       const categories = await getVastuCategories();
-      const mapped = categories.data.map((cat: { id: number; catName: string }) => ({
-        value: cat.catName,
-        label: cat.catName,
-      }));
+      const mapped = categories.data.map(
+        (cat: { id: number; catName: string }) => ({
+          value: cat.catName,
+          label: cat.catName,
+        }),
+      );
       setCategories(mapped);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -76,12 +83,16 @@ const VastuAnalysisIndex: React.FC = () => {
         title="Vastu Energy Analysis"
         reportListHref="/list/energy-vastu"
         footerButtons={[
+          {
+            label: "Save & Submit",
+            onClick: () => handleSubmit(onSubmit)(),
+            variant: "primary",
+          },
           { label: "Reset", onClick: handleReset, variant: "outline" },
-          { label: "Save & Submit", onClick: () => handleSubmit(onSubmit)(), variant: "primary" },
         ]}
       >
-         <form ref={formRef} onSubmit={handleSubmit(onSubmit)} noValidate>
-          <div className="grid grid-cols-2 gap-x-4 gap-y-5">
+        <form ref={formRef} onSubmit={handleSubmit(onSubmit)} noValidate>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-5">
             <Controller
               name="fullName"
               control={control}
@@ -96,7 +107,7 @@ const VastuAnalysisIndex: React.FC = () => {
                 />
               )}
             />
- 
+
             <Controller
               name="gender"
               control={control}
@@ -111,13 +122,13 @@ const VastuAnalysisIndex: React.FC = () => {
                 />
               )}
             />
- 
+
             <Controller
               name="mobileNumber"
               control={control}
               render={({ field }) => (
                 <CustomInput
-                  label="Mobile Number"
+                  label="Mobile No"
                   required
                   placeholder="Enter mobile number"
                   value={field.value}
@@ -126,7 +137,7 @@ const VastuAnalysisIndex: React.FC = () => {
                 />
               )}
             />
- 
+
             <Controller
               name="address"
               control={control}
@@ -139,7 +150,7 @@ const VastuAnalysisIndex: React.FC = () => {
                 />
               )}
             />
- 
+
             <Controller
               name="category"
               control={control}
@@ -156,13 +167,13 @@ const VastuAnalysisIndex: React.FC = () => {
                 />
               )}
             />
- 
+
             <Controller
               name="dateOfPurchase"
               control={control}
               render={({ field }) => (
                 <CustomInput
-                  label="Date of Purchase"
+                  label="Purchased Date"
                   variant="date"
                   value={field.value}
                   onChange={field.onChange}
@@ -183,7 +194,6 @@ const VastuAnalysisIndex: React.FC = () => {
                 />
               )}
             />
- 
           </div>
         </form>
       </CustomAnalysisComponent>
