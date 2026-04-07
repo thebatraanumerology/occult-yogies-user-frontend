@@ -5,10 +5,26 @@ export interface BreadcrumbItem {
   href?: string;
 }
 
+
 export interface BreadcrumbNavProps {
   items: BreadcrumbItem[];
   onNavigate?: (href: string) => void;
 }
+
+
+export interface MenuChild{
+  to: string;
+  label: string;
+};
+
+export interface MenuItem{
+  name: string;
+  items: MenuChild[];
+};
+
+export interface MenuProps{
+  menuItems: MenuItem[];
+};
 
 export type InputVariant = "text" | "date" | "select" | "gender" | "file";
  

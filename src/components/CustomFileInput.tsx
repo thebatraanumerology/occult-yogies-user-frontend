@@ -56,7 +56,7 @@ const CustomFileInput: React.FC<CustomFileInputProps> = ({ onChange }) => {
   return (
     <>
       {/* ── Trigger row — same width & style as all other CustomInput fields ── */}
-      <div className="relative w-3/4 max-w-3/4 min-w-2/3">
+      <div className="relative w-full lg:w-3/4 lg:max-w-3/4 min-w-2/3">
         <input
           ref={inputRef}
           type="file"

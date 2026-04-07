@@ -24,14 +24,20 @@ const CustomInput: React.FC<CustomInputProps> = ({
   );
 
   const inputClass =
-    "w-3/4 max-w-3/4 min-w-2/3 px-3 py-2 rounded-lg border border-black/10 bg-white text-regular placeholder:text-black/30 focus:outline-none focus:ring focus:ring-black/30 transition";
+    "w-full lg:w-3/4 lg:max-w-3/4 min-w-2/3 px-3 py-2 rounded-lg border border-black/10 bg-white text-regular placeholder:text-black/30 focus:outline-none focus:ring focus:ring-black/30 transition";
 
   const renderInput = () => {
     switch (variant) {
       case "date":
         return (
           <CustomDatePicker
-            value={value && typeof value !== 'object' ? new Date(value) : (value instanceof Date ? value : null)}
+            value={
+              value && typeof value !== "object"
+                ? new Date(value)
+                : value instanceof Date
+                  ? value
+                  : null
+            }
             onChange={(date) =>
               onChange?.(date ? date.toISOString().split("T")[0] : "")
             }
@@ -63,7 +69,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
 
       case "gender":
         return (
-          <div className="w-3/4 max-w-3/4 min-w-2/3 flex rounded-lg border border-black/10 overflow-hidden bg-white">
+          <div className="w-full lg:w-3/4 lg:max-w-3/4 min-w-2/3 flex rounded-lg border border-black/10 overflow-hidden bg-white">
             {genderOptions.map((opt, index) => {
               const isActive = value === opt;
 
@@ -88,15 +94,8 @@ const CustomInput: React.FC<CustomInputProps> = ({
           </div>
         );
 
-         
-
       case "file":
-        return (
-          <CustomFileInput
-            onChange={(file) => onChange?.(file)}
-          />
-        );
-
+        return <CustomFileInput onChange={(file) => onChange?.(file)} />;
 
       default:
         return (
@@ -113,7 +112,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
 
   return (
     <div className={`flex flex-col ${className}`}>
-      <div className="flex items-center justify-end gap-2">
+      <div className="lg:flex items-center justify-end gap-2">
         {Label}: {renderInput()}
       </div>
       {error && (
