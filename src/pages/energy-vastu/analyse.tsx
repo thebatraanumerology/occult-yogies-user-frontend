@@ -6,6 +6,7 @@ import CanvasToolbar from "@/src/components/CanvasToolBar";
 import CanvasArea, { Pin } from "@/src/components/CanvasAreas";
 import { useParams } from "react-router-dom";
 import { getVastuAnalysisByID } from "@/src/services/energyVastu/VastuAPIFunctions";
+import CustomLoader from "@/src/components/CustomLoader";
 
 const Field = ({ label, value }: { label: string; value?: string }) => (
   <div className="flex gap-1">
@@ -86,7 +87,7 @@ const EnergyVastuAnalyse = () => {
     canvasRef.current?.rotateCompassToGate(fromIdx, toIdx);
   }, []);
 
-  if (loading) return <p className="text-center mt-10">Loading...</p>;
+  if (loading) return <CustomLoader loading={loading} />;
 
   return (
     <section className="w-[80%] mx-auto">
