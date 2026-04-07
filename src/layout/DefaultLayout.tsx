@@ -5,9 +5,13 @@ const DefaultLayout: React.FC = () => {
   return (
     <>
       <NavBar />
-
-      <div className="fixed inset-0 -z-10 pointer-events-none">
-        <svg viewBox="0 0 800 800" fill="#fff">
+      <div className="fixed inset-0 -z-10 pointer-events-none w-full h-full">
+        <svg
+          viewBox="0 0 800 800"
+          preserveAspectRatio="xMidYMid slice"
+          className="w-full h-full"
+          fill="#fff"
+        >
           <defs>
             <radialGradient
               id="a"

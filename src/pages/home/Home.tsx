@@ -1,9 +1,9 @@
-const Home : React.FC = () => {
+const Home: React.FC = () => {
   return (
-    <div>
+    <div className="p-3">
       <h1 className="text-4xl font-bold text-primary">Home</h1>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
