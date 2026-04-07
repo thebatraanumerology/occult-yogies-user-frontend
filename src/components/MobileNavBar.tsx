@@ -35,7 +35,7 @@ const MobileNavBar: React.FC<MenuProps> = ({ menuItems }) => {
         </svg>
       </a>
       {open && (
-        <div className="w-[60%] md:hidden top-0 right-0 z-50 absolute h-full bg-black text-white">
+        <div className="fixed w-3/4 md:hidden top-0 right-0 z-50 h-full bg-magenta text-white">
           {/* Close Button */}
           <button
             onClick={() => {
@@ -58,7 +58,7 @@ const MobileNavBar: React.FC<MenuProps> = ({ menuItems }) => {
 
           <ul>
             {menuItems.map((list, ind) => (
-              <li key={ind} className="border-b border-gray-700">
+              <li key={ind} className="border-b border-yellow-700">
                 {/* Parent */}
                 <div
                   onClick={() => handleToggle(ind)}
@@ -84,11 +84,11 @@ const MobileNavBar: React.FC<MenuProps> = ({ menuItems }) => {
 
                 {/* Children */}
                 {openIndex === ind && (
-                  <ul className="bg-gray-900">
+                  <ul className="bg-bgYellow">
                     {list.items.map((child, cind) => (
                       <li
                         key={cind}
-                        className="p-3 pl-8 border-t border-gray-800"
+                        className="p-3 pl-8 border-t border-yellow-800"
                       >
                         <Link to={child.to}>{child.label}</Link>
                       </li>

@@ -72,6 +72,10 @@ export interface CustomFileInputProps {
   onChange?: (file: File | null) => void;
 }
 
+export interface TooltipType {
+  title: string;
+  children: React.ReactNode;
+};
 export interface CustomLoaderProps {
   loading: boolean;
 }
