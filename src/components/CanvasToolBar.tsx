@@ -38,11 +38,12 @@ const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
   const [showDivMenu, setShowDivMenu] = useState(false);
   const [degree, setDegree] = useState(0);
 
-  const btnBase ="flex items-center p-1 gap-1 rounded-md border text-xs font-medium transition-all duration-150 cursor-pointer select-none";
-  const inactive ="border-magenta text-magenta hover:bg-magenta/30";
-  const active ="border-magenta bg-magenta text-white";
-  const navGroup ="flex items-center gap-1";
-  const navSection ="flex items-center gap-3";
+  const btnBase =
+    "flex items-center p-1 gap-1 rounded-md border text-xs font-medium transition-all duration-150 cursor-pointer select-none";
+  const inactive = "border-magenta text-magenta hover:bg-magenta/30";
+  const active = "border-magenta bg-magenta text-white";
+  const navGroup = "flex flex-wrap items-center gap-1";
+  const navSection = "flex flex-wrap items-center gap-3";
 
   const handleTool = (tool: Tool, cb?: () => void) => {
     setActiveTool(tool);
@@ -51,7 +52,7 @@ const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
 
   return (
     <>
-      <nav className="flex items-center justify-between">
+      <nav className="grid grid-cols-1 gap-2 lg:flex items-center justify-between">
         {/* Nav group */}
         <article className={`${navSection}`}>
           <div className={`${navGroup}`}>

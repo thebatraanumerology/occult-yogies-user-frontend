@@ -102,7 +102,7 @@ const EnergyVastuAnalyse = () => {
         title="Vastu Energy Analysis"
         reportListHref="/list/energy-vastu"
       >
-        <div className="grid grid-cols-4 gap-x-3 gap-y-2">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 gap-y-2">
           {details.map((item) => (
             <Field key={item.label} label={item.label} value={item.value} />
           ))}
