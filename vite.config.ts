@@ -13,4 +13,18 @@ export default defineConfig({
       '@': path.resolve(__dirname, '.'),
     },
   },
+   server: {
+    proxy: {
+      '/api': {
+        target: 'https://backend.occultyogis.com',
+        changeOrigin: true,
+        secure: true,
+      },
+      '/public': {          // 👈 Add this for static files
+        target: 'https://backend.occultyogis.com',
+        changeOrigin: true,
+        secure: true,
+      }
+    }
+  }
 })

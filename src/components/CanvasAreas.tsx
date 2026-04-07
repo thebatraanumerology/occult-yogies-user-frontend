@@ -8,8 +8,14 @@ import {
 import { Stage, Layer, Image, Circle, Line, Text, Group } from "react-konva";
 import useImage from "use-image";
 import type Konva from "konva";
-import { CanvasAreaHandle, CanvasAreaProps, CompassLabel, CompassLine, HistoryEntry, Pin } from "../types/vastuTypes";
-
+import {
+  CanvasAreaHandle,
+  CanvasAreaProps,
+  CompassLabel,
+  CompassLine,
+  HistoryEntry,
+  Pin,
+} from "../types/vastuTypes";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const DIRECTION_LABELS: Record<number, string[]> = {
@@ -143,28 +149,21 @@ const computeGateRotation = (
   pins: Pin[],
   fromIdx: number,
   toIdx: number,
-  degreeOffset: number
+  degreeOffset: number,
 ): number => {
   const center = getPolygonCenter(pins);
   const fromPin = pins[fromIdx];
   const toPin = pins[toIdx];
   if (!fromPin || !toPin) return 0;
- 
+
   const midX = (fromPin.x + toPin.x) / 2;
   const midY = (fromPin.y + toPin.y) / 2;
- 
-  const wallDx = toPin.x - fromPin.x;
-  const wallDy = toPin.y - fromPin.y;
-  const isHorizontal = Math.abs(wallDx) >= Math.abs(wallDy);
- 
-  let northAngle: number;
-  if (isHorizontal) {
-    northAngle = midY < center.y ? -90 : 90;
-  } else {
-    northAngle = midX > center.x ? 180 : 0;
-  }
-  const rotationNeeded = northAngle - (-90);
-  return rotationNeeded - degreeOffset;
+  const dx = midX - center.x;
+  const dy = midY - center.y;
+  const angleToMid = Math.atan2(dy, dx) * (180 / Math.PI);
+  const rotation = -(angleToMid + 90) - degreeOffset;
+
+  return rotation;
 };
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -190,7 +189,6 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
     const degreeRef = useRef(degree);
     divisionRef.current = division;
     degreeRef.current = degree;
-
 
     const W = containerRef.current?.clientWidth ?? 800;
     const H = 600;
@@ -242,7 +240,7 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
           setScaleSync(1);
           setPositionSync({ x: 0, y: 0 });
           setHistory([{ pins: [], polygonDrawn: false }]);
-           onPinsChange?.([]);
+          onPinsChange?.([]);
         },
         zoomIn: () => setScaleSync((s) => Math.min(s + 0.1, 5)),
         zoomOut: () => setScaleSync((s) => Math.max(s - 0.1, 0.3)),
@@ -260,18 +258,16 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
           if (!polygonDrawn) return;
           const currentPins = pinsRef.current;
           if (currentPins.length < 3) return;
- 
+
           const rotation = computeGateRotation(
             currentPins,
             fromIdx,
             toIdx,
-            degreeRef.current
+            degreeRef.current,
           );
           setCompassVisible(true);
           setCompassRotation(rotation);
         },
-
-
       }),
       [polygonDrawn, onPinsChange],
     );
@@ -291,12 +287,13 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
         if (polygonDrawn) return;
 
         const stage = stageRef.current!;
-        const pointer = stage.getPointerPosition()!;
+        const pos = stage.getRelativePointerPosition()!;
+        // const pointer = stage.getPointerPosition()!;
 
-        const pos = {
-          x: (pointer.x - positionRef.current.x) / scaleRef.current,
-          y: (pointer.y - positionRef.current.y) / scaleRef.current,
-        };
+        // const pos = {
+        //   x: (pointer.x - positionRef.current.x) / scaleRef.current,
+        //   y: (pointer.y - positionRef.current.y) / scaleRef.current,
+        // };
 
         const currentPins = pinsRef.current;
 
@@ -314,7 +311,7 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
 
         const newPins = [
           ...currentPins,
-          { x: pos.x, y: pos.y, label: `Pin ${currentPins.length + 1}` },
+          { x: pos.x, y: pos.y, label: `P${currentPins.length + 1}` },
         ];
         setPinsSync(newPins);
         onPinsChange?.(newPins);

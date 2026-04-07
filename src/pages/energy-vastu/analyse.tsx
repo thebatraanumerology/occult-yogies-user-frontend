@@ -32,7 +32,7 @@ const EnergyVastuAnalyse = () => {
       try {
         setLoading(true);
         const res = await getVastuAnalysisByID(Number(id));
-        console.log("user's data:: ",res.data);
+        console.log("user's data:: ", res.data);
         setUserDetails(res.data);
       } catch (error) {
         console.error("Failed to fetch analysis:", error);
@@ -59,7 +59,8 @@ const EnergyVastuAnalyse = () => {
     : [];
 
   // Map image URL from API response
-  const mapUrl = userDetails?.map_url ?? "" ;
+  const mapUrl = userDetails?.map_url ?? "";
+
   const handlePinsChange = useCallback((pins: Pin[]) => {
     if (pins.length < 2) {
       setGateOptions([]);
@@ -67,19 +68,22 @@ const EnergyVastuAnalyse = () => {
     }
     const options: string[] = [];
     for (let i = 0; i < pins.length; i++) {
-      options.push(`A${i}-A${(i + 1) % pins.length}`);
+      const from = i + 1;
+      const to = i === pins.length - 1 ? 1 : i + 2;
+      options.push(`P${from}-P${to}`);
     }
     setGateOptions(options);
   }, []);
 
   const handleGateChange = useCallback((value: string) => {
     if (!value) return;
-    const match = value.match(/^A(\d+)-A(\d+)$/);
+    const match = value.match(/^P(\d+)-P(\d+)$/);
     if (!match) return;
-    canvasRef.current?.rotateCompassToGate(
-      parseInt(match[1], 10),
-      parseInt(match[2], 10)
-    );
+
+    const fromIdx = parseInt(match[1], 10) - 1; // P1 → index 0
+    const toIdx = parseInt(match[2], 10) - 1; // P2 → index 1, P1(wrap) → index 0
+
+    canvasRef.current?.rotateCompassToGate(fromIdx, toIdx);
   }, []);
 
   if (loading) return <p className="text-center mt-10">Loading...</p>;
