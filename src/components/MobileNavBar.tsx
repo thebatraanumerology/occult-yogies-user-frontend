@@ -96,6 +96,7 @@ const MobileNavBar: React.FC<MenuProps> = ({ menuItems }) => {
                             handleToggle(ind);
                           }}
                           to={child.to}
+                          className="w-full flex"
                         >
                           {child.label}
                         </Link>
