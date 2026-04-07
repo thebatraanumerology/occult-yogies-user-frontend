@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import PageNotFound from "../assets/404.png";
 import { Home, RefreshCcw } from "lucide-react";
 import Background from "../components/svg/Background";
+import { MagnifyingGlass } from "react-loader-spinner";
 
 const NotFound: React.FC = () => {
   return (
@@ -11,7 +12,7 @@ const NotFound: React.FC = () => {
       <div className="fixed inset-0 -z-10 pointer-events-none w-full h-full">
         <Background />
       </div>
-      <div className="h-screen flex flex-col items-center justify-center  text-center">
+      <div className="h-screen relative flex flex-col items-center justify-center  text-center">
         {/* <h1 className="text-7xl font-bold text-gray-800">404</h1> */}
         <img src={PageNotFound} className="w-80" alt="Oops! Page not found" />
         <p className="mt-0 text-lg text-gray-600">Oops! Page not found</p>
@@ -26,7 +27,6 @@ const NotFound: React.FC = () => {
             <Home size={15} />
             Go Home
           </Link>
-
           <a
             role="button"
             onClick={() => {
@@ -37,6 +37,19 @@ const NotFound: React.FC = () => {
             <RefreshCcw size={15} />
             Refresh
           </a>
+        </div>
+
+        <div className="absolute flex items-center justify-center">
+          <MagnifyingGlass
+            visible={true}
+            height="100"
+            width="100"
+            color="#781B43"
+            ariaLabel="magnifying-glass-loading"
+            wrapperStyle={{}}
+            wrapperClass="magnifying-glass-wrapper"
+            glassColor="#c0efff"
+          />
         </div>
       </div>
     </>
