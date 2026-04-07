@@ -1,21 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { MenuProps } from "../types/componentTypes";
 
-type MenuChild = {
-  to: string;
-  label: string;
-};
-
-type MenuItem = {
-  name: string;
-  items: MenuChild[];
-};
-
-type Props = {
-  menuItems: MenuItem[];
-};
-
-const MobileNavBar: React.FC<Props> = ({ menuItems }) => {
+const MobileNavBar: React.FC<MenuProps> = ({ menuItems }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [open, setOpen] = useState<boolean>(false);
 
