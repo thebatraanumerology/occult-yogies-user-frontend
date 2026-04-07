@@ -88,13 +88,17 @@ const MobileNavBar: React.FC<MenuProps> = ({ menuItems }) => {
                     {list.items.map((child, cind) => (
                       <li
                         key={cind}
-                        onClick={() => {
-                          setOpen(!open);
-                          handleToggle(ind);
-                        }}
                         className="p-3 pl-8 border-t border-yellow-800"
                       >
-                        <Link to={child.to}>{child.label}</Link>
+                        <Link
+                          onClick={() => {
+                            setOpen(!open);
+                            handleToggle(ind);
+                          }}
+                          to={child.to}
+                        >
+                          {child.label}
+                        </Link>
                       </li>
                     ))}
                   </ul>
