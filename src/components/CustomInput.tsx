@@ -24,7 +24,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
   );
 
   const inputClass =
-    "w-full lg:w-3/4 lg:max-w-3/4 min-w-2/3 px-3 py-2 rounded-lg border border-black/10 bg-white text-regular placeholder:text-black/30 focus:outline-none focus:ring focus:ring-black/30 transition";
+    `w-full lg:w-3/4 lg:max-w-3/4 min-w-2/3 px-3 py-2 rounded-lg border ${error ? 'border-red-500' : 'border-black/10'} bg-white text-regular placeholder:text-black/30 focus:outline-none focus:ring focus:ring-black/30 transition`;
 
   const renderInput = () => {
     switch (variant) {
@@ -95,7 +95,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
         );
 
       case "file":
-        return <CustomFileInput onChange={(file) => onChange?.(file)} />;
+        return <CustomFileInput error={error} onChange={(file) => onChange?.(file)} />;
 
       default:
         return (

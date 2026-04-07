@@ -21,7 +21,7 @@ const vastuPowerSchema = z.object({
   address: z.string().optional(),
   category: z.string().min(1, "Category is required"),
   dateOfPurchase: z.string().optional(),
-  map: z.instanceof(File).optional(),
+  map: z.instanceof(File, { message: "Map is required" }),
 });
 
 const VastuAnalysisIndex: React.FC = () => {
@@ -147,6 +147,7 @@ const VastuAnalysisIndex: React.FC = () => {
                   placeholder="Enter property address"
                   value={field.value}
                   onChange={field.onChange}
+                  error={errors.address?.message}
                 />
               )}
             />

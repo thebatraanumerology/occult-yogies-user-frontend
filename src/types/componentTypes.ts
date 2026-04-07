@@ -70,6 +70,7 @@ export interface CustomDateInputProps {
 export interface CustomFileInputProps {
   accept?: string;
   onChange?: (file: File | null) => void;
+  error?: string
 }
 
 export interface TooltipType {
