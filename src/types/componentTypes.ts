@@ -71,3 +71,7 @@ export interface CustomFileInputProps {
   accept?: string;
   onChange?: (file: File | null) => void;
 }
+
+export interface CustomLoaderProps {
+  loading: boolean;
+}
