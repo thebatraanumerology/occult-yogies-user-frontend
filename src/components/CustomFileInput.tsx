@@ -6,7 +6,7 @@ import { CustomFileInputProps } from "../types/componentTypes";
 // npm install react-cropper cropperjs
 // Add once in main.tsx: import "cropperjs/dist/cropper.css";
 
-const CustomFileInput: React.FC<CustomFileInputProps> = ({ onChange }) => {
+const CustomFileInput: React.FC<CustomFileInputProps> = ({ onChange,error }) => {
   const inputRef   = useRef<HTMLInputElement>(null);
   const cropperRef = useRef<ReactCropperElement>(null);
 
@@ -67,7 +67,7 @@ const CustomFileInput: React.FC<CustomFileInputProps> = ({ onChange }) => {
 
         <div
           onClick={() => inputRef.current?.click()}
-          className="flex items-center w-full rounded-lg border border-black/10 bg-white text-base overflow-hidden cursor-pointer focus-within:ring focus-within:ring-black/30 transition"
+          className={`flex items-center text-sm w-full rounded-lg border ${error ? 'border-red-500' :'border-black/10'} bg-white text-base overflow-hidden cursor-pointer focus-within:ring focus-within:ring-black/30 transition`}
         >
           <span className="px-3 py-2 bg-magenta text-white font-normal whitespace-nowrap select-none">
             Choose file
@@ -87,7 +87,7 @@ const CustomFileInput: React.FC<CustomFileInputProps> = ({ onChange }) => {
             <img
               src={previewSrc}
               alt="preview"
-              className="max-w-[120px] rounded-md border-2 border-borderGreen"
+              className="max-w-30 rounded-md border-2 border-borderGreen"
             />
           </div>
         )}
@@ -96,7 +96,7 @@ const CustomFileInput: React.FC<CustomFileInputProps> = ({ onChange }) => {
       {/* ── Crop modal ────────────────────────────────────────────────────────── */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="bg-white rounded-2xl shadow-2xl w-[680px] max-w-[95vw] p-6 flex flex-col gap-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-170 max-w-[95vw] p-6 flex flex-col gap-4">
 
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-magenta">Crop Image</h3>

@@ -90,7 +90,16 @@ const MobileNavBar: React.FC<MenuProps> = ({ menuItems }) => {
                         key={cind}
                         className="p-3 pl-8 border-t border-yellow-800"
                       >
-                        <Link to={child.to}>{child.label}</Link>
+                        <Link
+                          onClick={() => {
+                            setOpen(!open);
+                            handleToggle(ind);
+                          }}
+                          to={child.to}
+                          className="w-full flex"
+                        >
+                          {child.label}
+                        </Link>
                       </li>
                     ))}
                   </ul>

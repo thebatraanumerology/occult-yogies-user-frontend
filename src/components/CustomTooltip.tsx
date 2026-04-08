@@ -1,7 +1,7 @@
 import React from "react";
 import { TooltipType } from "../types/componentTypes";
 
-const Tooltip: React.FC<TooltipType> = ({ title, children }) => {
+const CustomTooltip: React.FC<TooltipType> = ({ title, children }) => {
   return (
     <div className="relative inline-block group ">
       {children}
@@ -13,4 +13,4 @@ const Tooltip: React.FC<TooltipType> = ({ title, children }) => {
   );
 };
 
-export default Tooltip;
+export default CustomTooltip;

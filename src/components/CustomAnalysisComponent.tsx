@@ -43,6 +43,7 @@ const CustomAnalysisComponent: React.FC<CustomAnalysisComponentProps> = ({
             <button
               key={index}
               onClick={btn.onClick}
+              disabled={btn.disabled}
               className={`rounded-lg shadow-md cursor-pointer px-6 py-2 transform duration-300 hover:scale-105 ${
                 btn.variant === "outline"
                   ? "text-magenta border border-magenta "

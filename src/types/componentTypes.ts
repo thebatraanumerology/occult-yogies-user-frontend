@@ -51,6 +51,7 @@ export interface ActionButton {
   label: string;
   onClick: () => void;
   variant?: "primary" | "outline";
+  disabled?: boolean
 }
 
 export interface CustomAnalysisComponentProps {
@@ -70,6 +71,7 @@ export interface CustomDateInputProps {
 export interface CustomFileInputProps {
   accept?: string;
   onChange?: (file: File | null) => void;
+  error?: string
 }
 
 export interface TooltipType {

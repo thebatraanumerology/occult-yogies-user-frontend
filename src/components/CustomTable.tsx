@@ -9,7 +9,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { CustomTableProps, ExportType } from "../types/vastuTypes";
-import Tooltip from "./Tooltip";
+import CustomTooltip from "./CustomTooltip";
 
 // ─── Button config ────────────────────────────────────────────────────────────
 const EXPORT_BUTTONS: {
@@ -91,7 +91,7 @@ const IconBtn: React.FC<{
   colorClass: string;
   onClick: () => void;
 }> = ({ icon, title, colorClass, onClick }) => (
-  <Tooltip title={title}>
+  <CustomTooltip title={title}>
     <button
       onClick={onClick}
       className={`w-8 h-8 flex items-center justify-center rounded-md text-white
@@ -99,7 +99,7 @@ const IconBtn: React.FC<{
     >
       {icon}
     </button>
-  </Tooltip>
+  </CustomTooltip>
 );
 
 const CustomTable: React.FC<CustomTableProps> = ({
