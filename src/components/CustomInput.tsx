@@ -23,8 +23,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
     </label>
   );
 
-  const inputClass =
-    `w-full lg:w-3/4 lg:max-w-3/4 min-w-2/3 px-3 py-2 rounded-lg border ${error ? 'border-red-500' : 'border-black/10'} bg-white text-regular placeholder:text-black/30 focus:outline-none focus:ring focus:ring-black/30 transition`;
+  const inputClass = `w-full lg:w-3/4 text-sm lg:max-w-3/4 min-w-2/3 px-3 py-2 rounded-lg border ${error ? "border-red-500" : "border-black/10"} bg-white text-regular placeholder:text-black/30 focus:outline-none focus:ring focus:ring-black/30 transition`;
 
   const renderInput = () => {
     switch (variant) {
@@ -46,25 +45,33 @@ const CustomInput: React.FC<CustomInputProps> = ({
 
       case "select":
         return (
-          <select
-            value={value as string}
-            onChange={(e) => onChange?.(e.target.value)}
-            className={`${inputClass} `}
+          <div
+            className={`relative group w-full lg:w-3/4 text-sm lg:max-w-3/4 min-w-2/3 rounded-lg border ${error ? "border-red-500" : "border-black/10"} bg-white text-regular placeholder:text-black/30 focus:outline-none focus:ring focus:ring-black/30 transition`}
           >
-            <option value="" disabled className="text-black/30">
-              {placeholder ?? "Select an option"}
-            </option>
-
-            {options.map((opt) => (
-              <option
-                key={opt.value}
-                value={opt.value}
-                className="text-black bg-white hover:bg-black/10 py-2"
-              >
-                {opt.label}
+            <select
+              value={value as string}
+              onChange={(e) => onChange?.(e.target.value)}
+              className={`w-full px-3 py-2 focus:outline-none rounded-lg ${error ? "border-red-500" : "border-black/10"} focus:outline-none focus:ring focus:ring-black/30 appearance-none`}
+            >
+              <option value="" disabled className="text-black/30">
+                {placeholder ?? "Select an option"}
               </option>
-            ))}
-          </select>
+
+              {options.map((opt) => (
+                <option
+                  key={opt.value}
+                  value={opt.value}
+                  className="text-black bg-white hover:bg-black/10 py-2"
+                >
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+
+            <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-600 text-xs  transform transition-transform duration-200 group-focus-within:rotate-180 rotate-0">
+              ▼
+            </div>
+          </div>
         );
 
       case "gender":
@@ -81,7 +88,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
                   key={opt}
                   type="button"
                   onClick={() => onChange?.(opt)}
-                  className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm transition
+                  className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm transition cursor-pointer
               ${isActive ? "bg-[#7a1040] text-white" : "text-black hover:bg-black/5"}
               ${index !== genderOptions.length - 1 ? "border-r border-black/10" : ""}
             `}
@@ -95,7 +102,12 @@ const CustomInput: React.FC<CustomInputProps> = ({
         );
 
       case "file":
-        return <CustomFileInput error={error} onChange={(file) => onChange?.(file)} />;
+        return (
+          <CustomFileInput
+            error={error}
+            onChange={(file) => onChange?.(file)}
+          />
+        );
 
       default:
         return (

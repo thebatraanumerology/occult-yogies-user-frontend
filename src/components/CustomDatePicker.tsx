@@ -30,6 +30,7 @@ const CustomDatePicker: React.FC<CustomDateInputProps> = ({
             ? "!bg-[#7a1040] !text-white !rounded-md"
             : "!rounded-md hover:!bg-[#7a1040]/10"
         }
+        maxDate={new Date()}
       />
       <CalendarDays
         size={16}

@@ -14,8 +14,8 @@ const Background: React.FC = () => {
           r="400"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0" stop-color="#fff7e6" />
-          <stop offset="1" stop-color="#fff5c8" />
+          <stop offset="0" stopColor="#fff7e6" />
+          <stop offset="1" stopColor="#fff5c8" />
         </radialGradient>
       </defs>
       <rect width="800" height="800" fill="url(#a)" />

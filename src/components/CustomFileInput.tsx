@@ -67,7 +67,7 @@ const CustomFileInput: React.FC<CustomFileInputProps> = ({ onChange,error }) => 
 
         <div
           onClick={() => inputRef.current?.click()}
-          className={`flex items-center w-full rounded-lg border ${error ? 'border-red-500' :'border-black/10'} bg-white text-base overflow-hidden cursor-pointer focus-within:ring focus-within:ring-black/30 transition`}
+          className={`flex items-center text-sm w-full rounded-lg border ${error ? 'border-red-500' :'border-black/10'} bg-white text-base overflow-hidden cursor-pointer focus-within:ring focus-within:ring-black/30 transition`}
         >
           <span className="px-3 py-2 bg-magenta text-white font-normal whitespace-nowrap select-none">
             Choose file

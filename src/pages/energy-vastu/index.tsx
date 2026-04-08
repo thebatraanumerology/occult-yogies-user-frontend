@@ -29,7 +29,7 @@ const VastuAnalysisIndex: React.FC = () => {
     control,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<z.infer<typeof vastuPowerSchema>>({
     resolver: zodResolver(vastuPowerSchema),
     defaultValues: {
@@ -46,9 +46,7 @@ const VastuAnalysisIndex: React.FC = () => {
   const formRef = useRef<HTMLFormElement>(null);
 
   const onSubmit = async (data: z.infer<typeof vastuPowerSchema>) => {
-    console.log("Submitted:", data);
     const response = await postVastuAnalysis(data);
-    console.log("Response:", response);
     const id = response.data.id;
     navigate(`/energy-vastu/${id}`);
   };
@@ -84,11 +82,17 @@ const VastuAnalysisIndex: React.FC = () => {
         reportListHref="/list/energy-vastu"
         footerButtons={[
           {
-            label: "Save & Submit",
+            label: `${isSubmitting ? "Submitting..." : "Save & Submit"}`,
             onClick: () => handleSubmit(onSubmit)(),
             variant: "primary",
+            disabled: isSubmitting,
           },
-          { label: "Reset", onClick: handleReset, variant: "outline" },
+          {
+            label: "Reset",
+            onClick: handleReset,
+            variant: "outline",
+            disabled: false,
+          },
         ]}
       >
         <form ref={formRef} onSubmit={handleSubmit(onSubmit)} noValidate>

@@ -51,6 +51,7 @@ export interface ActionButton {
   label: string;
   onClick: () => void;
   variant?: "primary" | "outline";
+  disabled?: boolean
 }
 
 export interface CustomAnalysisComponentProps {
