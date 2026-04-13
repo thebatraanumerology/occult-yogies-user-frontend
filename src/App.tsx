@@ -18,20 +18,18 @@ const App: React.FC = () => {
           <Route path="/login" element={<Login />} />
         </Route>
 
-        {/* <Route element={<ProtectedRoute />}> */}
+        <Route element={<ProtectedRoute />}>
           <Route element={<DefaultLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/energy-vastu" element={<VastuAnalysis />} />
             <Route path="/energy-vastu/:id" element={<EnergyVastuAnalyse />} />
             <Route path="/list/energy-vastu" element={<EnergyVastuList />} />
 
-             <Route path="/numerology">
-            <Route path="loshu-grid-mastery" element={<LoshuGridMastery />} />
+            <Route path="/numerology">
+              <Route path="loshu-grid-mastery" element={<LoshuGridMastery />} />
+            </Route>
           </Route>
-
-
-          </Route>
-        {/* </Route> */}
+        </Route>
 
         <Route path="*" element={<NotFound />} />
       </Routes>
