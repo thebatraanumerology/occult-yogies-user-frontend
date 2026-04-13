@@ -37,7 +37,7 @@ export default function BreadcrumbNav({ items, onNavigate }: BreadcrumbNavProps)
             ) : (
               <button
                 onClick={() => handleClick(item.href)}
-                className={`bg-transparent border-none p-0 text-magenta font-normal underline underline-offset-2 text-sm hover:opacity-70 transition-opacity ${
+                className={`bg-transparent cursor-pointer border-none p-0 text-magenta font-normal underline underline-offset-2 text-sm hover:opacity-70 transition-opacity ${
                   item.href ? "cursor-pointer" : "cursor-default"
                 }`}
               >

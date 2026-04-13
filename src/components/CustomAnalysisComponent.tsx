@@ -26,7 +26,7 @@ const CustomAnalysisComponent: React.FC<CustomAnalysisComponentProps> = ({
         </div>
         <button
           onClick={handleReportList}
-          className="flex items-center justify-center gap-2 bg-bgYellow text-black px-4 py-1 rounded-lg shadow-md cursor-pointer"
+          className="flex items-center justify-center gap-2 bg-bgYellow text-black px-4 py-2 rounded-lg shadow-md cursor-pointer transform hover:scale-105 duration-300 scale-100"
         >
           <FileText size={16} />
           Report List
