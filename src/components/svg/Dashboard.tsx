@@ -1,0 +1,39 @@
+import React from "react";
+
+type classNameType = {
+  color?: string | undefined;
+  className?: string | undefined;
+};
+
+const Dashboard: React.FC<classNameType> = ({ color, className }) => {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      fill='currentColor'
+    >
+      <path
+        d="M9 1.5H3C2.17157 1.5 1.5 2.17157 1.5 3V9C1.5 9.82843 2.17157 10.5 3 10.5H9C9.82843 10.5 10.5 9.82843 10.5 9V3C10.5 2.17157 9.82843 1.5 9 1.5Z"
+        stroke="#F9E9C7"
+        stroke-linecap="round"
+      />
+      <path
+        d="M21 1.5H15C14.1716 1.5 13.5 2.17157 13.5 3V9C13.5 9.82843 14.1716 10.5 15 10.5H21C21.8284 10.5 22.5 9.82843 22.5 9V3C22.5 2.17157 21.8284 1.5 21 1.5Z"
+        stroke="#F9E9C7"
+        stroke-linecap="round"
+      />
+      <path
+        d="M9 13.5H3C2.17157 13.5 1.5 14.1716 1.5 15V21C1.5 21.8284 2.17157 22.5 3 22.5H9C9.82843 22.5 10.5 21.8284 10.5 21V15C10.5 14.1716 9.82843 13.5 9 13.5Z"
+        stroke="#F9E9C7"
+        stroke-linecap="round"
+      />
+      <path
+        d="M18 22.5C20.4853 22.5 22.5 20.4853 22.5 18C22.5 15.5147 20.4853 13.5 18 13.5C15.5147 13.5 13.5 15.5147 13.5 18C13.5 20.4853 15.5147 22.5 18 22.5Z"
+        stroke="#F9E9C7"
+        stroke-linecap="round"
+      />
+    </svg>
+  );
+};
+
+export default Dashboard;

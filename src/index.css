@@ -5,24 +5,24 @@
 
 @custom-variant dark (&:is(.dark *));
 
-
-
 /* ─── Design Tokens ──────────────────────────────────────── */
 @theme {
-  --font-outfit: 'Outfit Variable', sans-serif;
-  --color-magenta:     #781B43;
-  --color-bgYellow:    #EFBA49;
-  --color-lightYellow: #F9E9C7;
-  --color-white:       #ffffff;
-  --color-black:       #000000;
+  --font-outfit: "Outfit Variable", sans-serif;
+  --color-magenta: #781b43;
+  --color-bgYellow: #efba49;
+  --color-lightYellow: #f9e9c7;
+  --color-white: #ffffff;
+  --color-black: #000000;
   --color-bg-secondary: #4c1628;
   --color-borderGreen: #198754;
-  --color-edit-blue: #0D6EFD;
-  --color-delete-red: #DC3545;
- 
+  --color-edit-blue: #0d6efd;
+  --color-delete-red: #dc3545;
+
+  --color-rgb-bgYellow: 239, 186, 76;
 }
 
-body, nav{
+body,
+nav {
   font-family: var(--font-outfit) !important;
 }
 
