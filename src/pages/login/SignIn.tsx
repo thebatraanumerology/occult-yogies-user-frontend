@@ -9,39 +9,51 @@ import { useAuth } from "@/src/context/AuthContext";
 import { doLogin } from "@/src/services/login/LoginAPIFunctions";
 
 const loginSchema = z.object({
-  email:    z.string().min(1, "Please enter a valid email address!").email("Please enter a valid email address!"),
+  email: z
+    .string()
+    .min(1, "Please enter a valid email address!")
+    .email("Please enter a valid email address!"),
   password: z.string().min(6, "Please enter correct password"),
 });
 type LoginForm = z.infer<typeof loginSchema>;
 
-const SignIn: React.FC<{ onForgotPassword: () => void }> = ({ onForgotPassword }) => {
-  const navigate   = useNavigate();
-  const { login }  = useAuth();
+const SignIn: React.FC<{ onForgotPassword: () => void }> = ({
+  onForgotPassword,
+}) => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const [apiError, setApiError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
   });
 
-  const inputGroup = "flex h-12 rounded-md border border-lightYellow/40 overflow-hidden focus-within:border-lightYellow focus-within:ring-4 focus-within:ring-lightYellow/40 transition-all duration-200";
-  const input      = "flex-1 bg-transparent px-3 text-white placeholder:text-white/40 outline-none focus:bg-transparent focus:ring-0";
+  const inputGroup =
+    "flex h-12 rounded-md border border-lightYellow/40 overflow-hidden focus-within:border-lightYellow focus-within:ring-4 focus-within:ring-lightYellow/40 transition-all duration-200";
+  const input =
+    "flex-1 bg-transparent px-3 text-white placeholder:text-white/40 outline-none focus:bg-transparent focus:ring-0";
 
   const onSubmit = async (formData: LoginForm) => {
     try {
       setApiError(null);
       setSubmitting(true);
 
-      const res = await doLogin(formData);       
+      const res = await doLogin(formData);
       if (res.status) {
-        login(res.data.user, res.data.token);   
+        login(res.data.user, res.data.token);
         navigate("/energy-vastu");
       } else {
         setApiError(res.message ?? "Login failed. Please try again.");
       }
     } catch (err: any) {
       const msg =
-        err?.response?.data?.message ?? "Invalid credentials. Please try again.";
+        err?.response?.data?.message ??
+        "Invalid credentials. Please try again.";
       setApiError(msg);
     } finally {
       setSubmitting(false);
@@ -51,8 +63,12 @@ const SignIn: React.FC<{ onForgotPassword: () => void }> = ({ onForgotPassword }
   return (
     <div className="w-full text-white text-center">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-        <h1 className="text-3xl font-semibold text-lightYellow mb-2">Sign in with email</h1>
-        <p className="text-white text-sm mb-8">Enter your credentials to access your account.</p>
+        <h1 className="text-3xl font-semibold text-lightYellow mb-2">
+          Sign in with email
+        </h1>
+        <p className="text-white text-sm mb-8">
+          Enter your credentials to access your account.
+        </p>
 
         {/* API-level error */}
         {apiError && (
@@ -74,7 +90,9 @@ const SignIn: React.FC<{ onForgotPassword: () => void }> = ({ onForgotPassword }
               className={input}
             />
           </div>
-          {errors.email && <p className="text-red-400 text-xs">{errors.email.message}</p>}
+          {errors.email && (
+            <p className="text-red-400 text-xs">{errors.email.message}</p>
+          )}
         </div>
 
         {/* Password */}
@@ -90,18 +108,28 @@ const SignIn: React.FC<{ onForgotPassword: () => void }> = ({ onForgotPassword }
               className={input}
             />
           </div>
-          {errors.password && <p className="text-red-400 text-xs">{errors.password.message}</p>}
+          {errors.password && (
+            <p className="text-red-400 text-xs">{errors.password.message}</p>
+          )}
         </div>
 
         {/* Forgot */}
-        <div className="text-right" onClick={(e) => { e.preventDefault(); onForgotPassword(); }}>
-          <a className="text-lightYellow hover:underline cursor-pointer">Forgot Password?</a>
+        <div
+          className="text-right"
+          onClick={(e) => {
+            e.preventDefault();
+            onForgotPassword();
+          }}
+        >
+          <a className="text-lightYellow hover:underline cursor-pointer">
+            Forgot Password?
+          </a>
         </div>
 
         {/* Submit */}
         <button
           disabled={submitting}
-          className="w-full h-11 rounded-lg bg-bgYellow text-black font-semibold hover:bg-bgYellow/90 disabled:opacity-60"
+          className="w-full h-11 cursor-pointer rounded-lg bg-bgYellow text-black font-semibold hover:bg-bgYellow/90 disabled:opacity-60"
         >
           {submitting ? "Signing in…" : "Login Now"}
         </button>

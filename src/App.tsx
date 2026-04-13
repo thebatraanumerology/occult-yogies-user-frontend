@@ -19,6 +19,7 @@ import AdminPackageList from "./pages/admin-panel/package/AdminPackageList";
 import AdminPackageInfo from "./pages/admin-panel/package/AdminPackageInfo";
 import AdminPlanList from "./pages/admin-panel/plan/AdminPlanList";
 import AdminPlanInfo from "./pages/admin-panel/plan/AdminPlanInfo";
+import LoshuGridMastery from "./pages/loshu-grid/LoshuGridMastery";
 
 const App: React.FC = () => {
   return (
@@ -29,12 +30,17 @@ const App: React.FC = () => {
         </Route>
 
         <Route element={<ProtectedRoute />}>
-          <Route element={<DefaultLayout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/energy-vastu" element={<VastuAnalysis />} />
-            <Route path="/energy-vastu/:id" element={<EnergyVastuAnalyse />} />
-            <Route path="/list/energy-vastu" element={<EnergyVastuList />} />
+        <Route element={<DefaultLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/energy-vastu" element={<VastuAnalysis />} />
+          <Route path="/energy-vastu/:id" element={<EnergyVastuAnalyse />} />
+          <Route path="/list/energy-vastu" element={<EnergyVastuList />} />
+
+          <Route path="/numerology">
+            <Route path="loshu-grid-mastery" element={<LoshuGridMastery />} />
           </Route>
+          
+        </Route>
         </Route>
 
         {/* Admin Panel  */}

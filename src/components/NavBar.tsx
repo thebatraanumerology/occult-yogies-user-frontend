@@ -104,6 +104,7 @@ const NavBar: React.FC = () => {
         ref={dropdownRef}
         className="flex items-center gap-1 font-normal text-base"
       >
+
         <DropdownNav
           label="Vastu"
           items={ENERGY_VASTU_ITEMS}
