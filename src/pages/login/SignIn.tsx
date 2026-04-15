@@ -3,20 +3,21 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/src/context/AuthContext";
 import { doLogin } from "@/src/services/login/LoginAPIFunctions";
 
 const loginSchema = z.object({
-  email:    z.string().min(1, "Please enter a valid email address!").email("Please enter a valid email address!"),
+  email: z.string().min(1, "Please enter a valid email address!").email("Please enter a valid email address!"),
   password: z.string().min(6, "Please enter correct password"),
 });
 type LoginForm = z.infer<typeof loginSchema>;
 
 const SignIn: React.FC<{ onForgotPassword: () => void }> = ({ onForgotPassword }) => {
-  const navigate   = useNavigate();
-  const { login }  = useAuth();
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [apiError, setApiError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -25,16 +26,16 @@ const SignIn: React.FC<{ onForgotPassword: () => void }> = ({ onForgotPassword }
   });
 
   const inputGroup = "flex h-12 rounded-md border border-lightYellow/40 overflow-hidden focus-within:border-lightYellow focus-within:ring-4 focus-within:ring-lightYellow/40 transition-all duration-200";
-  const input      = "flex-1 bg-transparent px-3 text-white placeholder:text-white/40 outline-none focus:bg-transparent focus:ring-0";
+  const input = "flex-1 bg-transparent px-3 text-white placeholder:text-white/40 outline-none focus:bg-transparent focus:ring-0";
 
   const onSubmit = async (formData: LoginForm) => {
     try {
       setApiError(null);
       setSubmitting(true);
 
-      const res = await doLogin(formData);       
+      const res = await doLogin(formData);
       if (res.status) {
-        login(res.data.user, res.data.token);   
+        login(res.data.user, res.data.token);
         navigate("/energy-vastu");
       } else {
         setApiError(res.message ?? "Login failed. Please try again.");
@@ -70,7 +71,9 @@ const SignIn: React.FC<{ onForgotPassword: () => void }> = ({ onForgotPassword }
             <input
               type="email"
               placeholder="Email ID"
-              {...register("email")}
+              {...register("email", {
+                setValueAs: (value: string) => value.trim(),
+              })}
               className={input}
             />
           </div>
@@ -84,11 +87,21 @@ const SignIn: React.FC<{ onForgotPassword: () => void }> = ({ onForgotPassword }
               <Lock size={18} className="text-lightYellow" />
             </span>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Password"
               {...register("password")}
               className={input}
             />
+            <span
+              className="flex items-center px-3 cursor-pointer"
+              onClick={() => setShowPassword((prev) => !prev)}
+            >
+              {showPassword ? (
+                <EyeOff size={18} className="text-lightYellow" />
+              ) : (
+                <Eye size={18} className="text-lightYellow" />
+              )}
+            </span>
           </div>
           {errors.password && <p className="text-red-400 text-xs">{errors.password.message}</p>}
         </div>
