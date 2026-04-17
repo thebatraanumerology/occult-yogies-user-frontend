@@ -1,4 +1,3 @@
-import { file } from "zod";
 
 export interface BreadcrumbItem {
   label: string;
@@ -12,28 +11,28 @@ export interface BreadcrumbNavProps {
 }
 
 
-export interface MenuChild{
+export interface MenuChild {
   to: string;
   label: string;
 };
 
-export interface MenuItem{
+export interface MenuItem {
   name: string;
   items: MenuChild[];
 };
 
-export interface MenuProps{
+export interface MenuProps {
   menuItems: MenuItem[];
 };
 
 export type InputVariant = "text" | "date" | "select" | "gender" | "file";
- 
+
 
 export interface SelectOption {
   label: string;
   value: string;
 }
- 
+
 export interface CustomInputProps {
   label: string;
   required?: boolean;
@@ -41,8 +40,8 @@ export interface CustomInputProps {
   placeholder?: string;
   value?: string | Date | null | File;
   onChange?: (value: string | File | null) => void;
-  options?: SelectOption[];            
-  genderOptions?: string[];           
+  options?: SelectOption[];
+  genderOptions?: string[];
   className?: string;
   error?: string;
 }
@@ -56,10 +55,10 @@ export interface ActionButton {
 
 export interface CustomAnalysisComponentProps {
   children?: React.ReactNode;
-  title: string; 
-  reportListHref?: string; 
-  onReportList?: () => void; 
-  footerButtons?: ActionButton[]; 
+  title: string;
+  reportListHref?: string;
+  onReportList?: () => void;
+  footerButtons?: ActionButton[];
 }
 
 export interface CustomDateInputProps {
@@ -70,6 +69,7 @@ export interface CustomDateInputProps {
 
 export interface CustomFileInputProps {
   accept?: string;
+  value?: File | null;
   onChange?: (file: File | null) => void;
   error?: string
 }

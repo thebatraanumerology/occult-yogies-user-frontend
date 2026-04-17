@@ -104,6 +104,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
       case "file":
         return (
           <CustomFileInput
+            value={value as File | null}
             error={error}
             onChange={(file) => onChange?.(file)}
           />

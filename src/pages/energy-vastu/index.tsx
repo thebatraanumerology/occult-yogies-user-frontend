@@ -194,8 +194,9 @@ const VastuAnalysisIndex: React.FC = () => {
                   label="Upload Map"
                   variant="file"
                   required
+                  value={field.value}
                   onChange={(file) => field.onChange(file as File)}
-                  error={errors.map?.message}
+                  error={errors.map?.message as string}
                 />
               )}
             />

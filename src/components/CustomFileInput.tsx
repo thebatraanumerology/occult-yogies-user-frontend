@@ -3,18 +3,24 @@ import Cropper, { ReactCropperElement } from "react-cropper";
 import { RotateCcw, RotateCw, Check, X } from "lucide-react";
 import { CustomFileInputProps } from "../types/componentTypes";
 
-// npm install react-cropper cropperjs
-// Add once in main.tsx: import "cropperjs/dist/cropper.css";
-
-const CustomFileInput: React.FC<CustomFileInputProps> = ({ onChange,error }) => {
-  const inputRef   = useRef<HTMLInputElement>(null);
+const CustomFileInput: React.FC<CustomFileInputProps> = ({ onChange, error, value }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const cropperRef = useRef<ReactCropperElement>(null);
 
-  const [fileName,   setFileName]   = useState<string>("");
-  const [rawSrc,     setRawSrc]     = useState<string>("");  // base64 → fed to Cropper
+  const [fileName, setFileName] = useState<string>("");
+  const [rawSrc, setRawSrc] = useState<string>("");  // base64 → fed to Cropper
   const [previewSrc, setPreviewSrc] = useState<string>("");  // thumbnail after Apply
-  const [modalOpen,  setModalOpen]  = useState<boolean>(false);
-  const [origFile,   setOrigFile]   = useState<File | null>(null);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [origFile, setOrigFile] = useState<File | null>(null);
+
+  React.useEffect(() => {
+    if (!value) {
+      setFileName("");
+      setRawSrc("");
+      setPreviewSrc("");
+      setOrigFile(null);
+    }
+  }, [value]);
 
   // ── File selected → read as base64 → open crop modal ─────────────────────
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,7 +39,7 @@ const CustomFileInput: React.FC<CustomFileInputProps> = ({ onChange,error }) => 
   };
 
   // ── Cropper rotation controls ─────────────────────────────────────────────
-  const rotateLeft  = () => cropperRef.current?.cropper.rotate(-90);
+  const rotateLeft = () => cropperRef.current?.cropper.rotate(-90);
   const rotateRight = () => cropperRef.current?.cropper.rotate(90);
 
   // ── Apply → small thumbnail for preview, emit original File to parent ─────
@@ -67,7 +73,7 @@ const CustomFileInput: React.FC<CustomFileInputProps> = ({ onChange,error }) => 
 
         <div
           onClick={() => inputRef.current?.click()}
-          className={`flex items-center text-sm w-full rounded-lg border ${error ? 'border-red-500' :'border-black/10'} bg-white text-base overflow-hidden cursor-pointer focus-within:ring focus-within:ring-black/30 transition`}
+          className={`flex items-center text-sm w-full rounded-lg border ${error ? 'border-red-500' : 'border-black/10'} bg-white text-base overflow-hidden cursor-pointer focus-within:ring focus-within:ring-black/30 transition`}
         >
           <span className="px-3 py-2 bg-magenta text-white font-normal whitespace-nowrap select-none">
             Choose file
