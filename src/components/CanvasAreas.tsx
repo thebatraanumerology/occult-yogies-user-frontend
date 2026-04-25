@@ -291,7 +291,20 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
               x={W / 2}
               y={H / 2}
             >
-              {bgImage && <Image image={bgImage} />}
+              {bgImage && (() => {
+                const scale = Math.min(W / bgImage.width, H / bgImage.height);
+                const w = bgImage.width * scale;
+                const h = bgImage.height * scale;
+                return (
+                  <Image
+                    image={bgImage}
+                    x={(W - w) / 2}
+                    y={(H - h) / 2}
+                    width={w}
+                    height={h}
+                  />
+                );
+              })()}
             </Group>
           </Layer>
 
