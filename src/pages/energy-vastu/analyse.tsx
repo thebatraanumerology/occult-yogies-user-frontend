@@ -46,21 +46,20 @@ const EnergyVastuAnalyse = () => {
 
   const details = userDetails
     ? [
-        { label: "Full Name", value: userDetails.full_name },
-        { label: "Mobile No.", value: userDetails.mobile_number },
-        { label: "Category", value: userDetails.category },
-        {
-          label: "Date of Purchase",
-          value: userDetails.date_of_purchase
-            ? new Date(userDetails.date_of_purchase).toLocaleDateString("en-GB") // → DD/MM/YYYY
-            : "",
-        },
-        { label: "Address", value: userDetails.address },
-      ]
+      { label: "Full Name", value: userDetails.full_name },
+      { label: "Mobile No.", value: userDetails.mobile_number },
+      { label: "Category", value: userDetails.category },
+      {
+        label: "Date of Purchase",
+        value: userDetails.date_of_purchase
+          ? new Date(userDetails.date_of_purchase).toLocaleDateString("en-GB")
+          : "",
+      },
+      { label: "Address", value: userDetails.address },
+    ]
     : [];
 
-  // Map image URL from API response
-  const mapUrl = userDetails?.map_url ?? "";
+  const mapUrl = userDetails?.map_image_url;
 
   const handlePinsChange = useCallback((pins: Pin[]) => {
     if (pins.length < 2) {
@@ -76,14 +75,17 @@ const EnergyVastuAnalyse = () => {
     setGateOptions(options);
   }, []);
 
+  // ⬇⬇⬇ CHANGE: handler now passes just the wall index. The engine inside
+  // CanvasArea derives rotation from (wallIndex, polygon, northAngle).
   const handleGateChange = useCallback((value: string) => {
     if (!value) return;
     const match = value.match(/^P(\d+)-P(\d+)$/);
     if (!match) return;
 
-    const fromIdx = parseInt(match[1], 10) - 1; // P1 → index 0
-    const toIdx = parseInt(match[2], 10) - 1; // P2 → index 1, P1(wrap) → index 0
+    const fromIdx = parseInt(match[1], 10) - 1; // P1 → 0
+    const toIdx = parseInt(match[2], 10) - 1;
 
+    // Wall i goes from polygon[i] → polygon[(i+1) % n], so wallIndex = fromIdx.
     canvasRef.current?.rotateCompassToGate(fromIdx, toIdx);
   }, []);
 
@@ -130,7 +132,7 @@ const EnergyVastuAnalyse = () => {
         <div className="mt-4">
           <CanvasArea
             ref={canvasRef}
-            mapUrl={mapUrl ?? ""} // ← dynamic map from API
+            mapUrl={mapUrl ?? ""}
             tool={tool}
             division={division}
             degree={degree}
