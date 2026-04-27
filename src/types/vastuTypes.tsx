@@ -21,7 +21,10 @@ export interface CanvasToolbarProps {
   onMaximize?: () => void;
   onGateChange?: (val: string) => void;
   onDegreeChange?: (val: number) => void;
+  onDevtasSelection?: () => void;
   gateOptions?: string[];
+  onDevtasToggle?: () => void;
+devtasActive?: boolean;
 }
 
 export interface CanvasAreaHandle {
@@ -34,6 +37,9 @@ export interface CanvasAreaHandle {
   rotateRight: () => void;
   drawCompass: () => void;
   rotateCompassToGate: (fromIdx: number, toIdx: number) => void;
+  showDevtas: () => void;
+  hideDevtas: () => void;
+  isDevtasVisible: () => boolean;
 }
 
 export interface Pin {
