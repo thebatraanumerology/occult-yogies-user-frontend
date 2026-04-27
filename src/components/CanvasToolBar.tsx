@@ -10,6 +10,9 @@ import {
   ZoomOut,
   Maximize2,
   ChevronDown,
+  Sparkles,
+  Sun,
+  Star,
 } from "lucide-react";
 import { useState } from "react";
 import { CanvasToolbarProps } from "../types/vastuTypes";
@@ -31,6 +34,8 @@ const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
   onMaximize,
   onGateChange,
   onDegreeChange,
+  onDevtasToggle,
+  devtasActive = false,
   gateOptions = [],
 }: CanvasToolbarProps) => {
   const [activeTool, setActiveTool] = useState<Tool>("move");
@@ -149,6 +154,17 @@ const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
         </article>
 
         <article className={`${navSection}`}>
+
+        <div className={`${navGroup}`}>
+             <button
+              className={`${btnBase} ${devtasActive ? active : inactive}`}
+              onClick={() => onDevtasToggle?.()}
+              title="Toggle 45-Devta Mandala (auto-switches to 32 divisions)"
+            >
+              <Star size={13} /> Devtas
+            </button>
+          </div>
+
           {/* Gate select */}
           <select
             className={`${btnBase} ${inactive}`}

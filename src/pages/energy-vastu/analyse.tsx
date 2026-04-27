@@ -24,6 +24,7 @@ const EnergyVastuAnalyse = () => {
   const [gateOptions, setGateOptions] = useState<string[]>([]);
   const [userDetails, setUserDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [devtasOn, setDevtasOn] = useState(false);
   const canvasRef = useRef<CanvasAreaHandle>(null);
 
   const { id } = useParams<{ id: string }>();
@@ -46,17 +47,17 @@ const EnergyVastuAnalyse = () => {
 
   const details = userDetails
     ? [
-      { label: "Full Name", value: userDetails.full_name },
-      { label: "Mobile No.", value: userDetails.mobile_number },
-      { label: "Category", value: userDetails.category },
-      {
-        label: "Date of Purchase",
-        value: userDetails.date_of_purchase
-          ? new Date(userDetails.date_of_purchase).toLocaleDateString("en-GB")
-          : "",
-      },
-      { label: "Address", value: userDetails.address },
-    ]
+        { label: "Full Name", value: userDetails.full_name },
+        { label: "Mobile No.", value: userDetails.mobile_number },
+        { label: "Category", value: userDetails.category },
+        {
+          label: "Date of Purchase",
+          value: userDetails.date_of_purchase
+            ? new Date(userDetails.date_of_purchase).toLocaleDateString("en-GB")
+            : "",
+        },
+        { label: "Address", value: userDetails.address },
+      ]
     : [];
 
   const mapUrl = userDetails?.map_image_url;
@@ -88,6 +89,21 @@ const EnergyVastuAnalyse = () => {
     // Wall i goes from polygon[i] → polygon[(i+1) % n], so wallIndex = fromIdx.
     canvasRef.current?.rotateCompassToGate(fromIdx, toIdx);
   }, []);
+
+  const handleDevtasToggle = useCallback(() => {
+    if (devtasOn) {
+      // Turning OFF
+      setDevtasOn(false);
+      canvasRef.current?.hideDevtas();
+      return;
+    }
+    // Turning ON
+    if (division !== 32) {
+      setDiv(32); // bump to 32 — Devtas only render at 32
+    }
+    setDevtasOn(true);
+    canvasRef.current?.showDevtas();
+  }, [devtasOn, division]);
 
   if (loading) return <CustomLoader loading={loading} />;
 
@@ -127,6 +143,8 @@ const EnergyVastuAnalyse = () => {
           onMaximize={() => canvasRef.current?.fitToScreen()}
           gateOptions={gateOptions}
           onGateChange={handleGateChange}
+          onDevtasToggle={handleDevtasToggle}
+          devtasActive={devtasOn}
         />
 
         <div className="mt-4">

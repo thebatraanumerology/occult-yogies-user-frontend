@@ -6,7 +6,16 @@ import {
   useImperativeHandle,
   useMemo,
 } from "react";
-import { Stage, Layer, Image, Circle, Line, Text, Group } from "react-konva";
+import {
+  Stage,
+  Layer,
+  Image,
+  Circle,
+  Line,
+  Text,
+  Group,
+  Rect,
+} from "react-konva";
 import useImage from "use-image";
 import type Konva from "konva";
 import {
@@ -35,6 +44,9 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
     const [polygonDrawn, setPolygonDrawn] = useState(false);
     const [compassVisible, setCompassVisible] = useState(false);
 
+    // ⬇⬇⬇ NEW: Devtas overlay visibility (controlled by toolbar button)
+    const [devtasVisible, setDevtasVisible] = useState(false);
+
     // ⬇⬇⬇ CHANGE 2: store wallIndex (gate side) instead of compassRotation
     // wallIndex = which polygon edge the gate is on. -1 = none chosen yet.
     const [wallIndex, setWallIndex] = useState<number>(-1);
@@ -44,6 +56,12 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
     const [history, setHistory] = useState<HistoryEntry[]>([
       { pins: [], polygonDrawn: false },
     ]);
+    const [hoveredDevta, setHoveredDevta] = useState<{
+      x: number;
+      y: number;
+      name: string;
+      num: number;
+    } | null>(null);
     const scaleRef = useRef(1);
     const positionRef = useRef({ x: 0, y: 0 });
     const pinsRef = useRef<Pin[]>([]);
@@ -97,6 +115,7 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
           pinsRef.current = [];
           setPolygonDrawn(false);
           setCompassVisible(false);
+          setDevtasVisible(false); // ⬅ NEW
           setWallIndex(-1); // ⬅ CHANGE 3: reset gate side, not rotation
           setScaleSync(1);
           setPositionSync({ x: 0, y: 0 });
@@ -123,8 +142,18 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
           setWallIndex(fromIdx);
           setCompassVisible(true);
         },
+
+        // ⬇⬇⬇ NEW: Devtas overlay control. Parent calls these from toolbar.
+        showDevtas: () => {
+          if (!polygonDrawn) return;
+          if (pinsRef.current.length < 3) return;
+          setCompassVisible(true);
+          setDevtasVisible(true);
+        },
+        hideDevtas: () => setDevtasVisible(false),
+        isDevtasVisible: () => devtasVisible,
       }),
-      [polygonDrawn, onPinsChange],
+      [polygonDrawn, onPinsChange, devtasVisible],
     );
 
     // ── Stage click → place pin ──────────────────────────────────────────────
@@ -147,8 +176,7 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
 
         if (currentPins.length >= 2) {
           const dist = Math.sqrt(
-            (pos.x - currentPins[0].x) ** 2 +
-            (pos.y - currentPins[0].y) ** 2,
+            (pos.x - currentPins[0].x) ** 2 + (pos.y - currentPins[0].y) ** 2,
           );
           if (dist < 20) {
             setPolygonDrawn(true);
@@ -227,7 +255,7 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
 
       const ringR = Math.sqrt(
         (divisionLines[0].x - center.x) ** 2 +
-        (divisionLines[0].y - center.y) ** 2,
+          (divisionLines[0].y - center.y) ** 2,
       );
       const labelR = ringR + 18; // 18px outside the ring
 
@@ -245,9 +273,9 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
 
     const polygonLines = polygonDrawn
       ? pins.map((pin, i) => {
-        const next = pins[(i + 1) % pins.length];
-        return { points: [pin.x, pin.y, next.x, next.y] };
-      })
+          const next = pins[(i + 1) % pins.length];
+          return { points: [pin.x, pin.y, next.x, next.y] };
+        })
       : [];
 
     return (
@@ -291,20 +319,21 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
               x={W / 2}
               y={H / 2}
             >
-              {bgImage && (() => {
-                const scale = Math.min(W / bgImage.width, H / bgImage.height);
-                const w = bgImage.width * scale;
-                const h = bgImage.height * scale;
-                return (
-                  <Image
-                    image={bgImage}
-                    x={(W - w) / 2}
-                    y={(H - h) / 2}
-                    width={w}
-                    height={h}
-                  />
-                );
-              })()}
+              {bgImage &&
+                (() => {
+                  const scale = Math.min(W / bgImage.width, H / bgImage.height);
+                  const w = bgImage.width * scale;
+                  const h = bgImage.height * scale;
+                  return (
+                    <Image
+                      image={bgImage}
+                      x={(W - w) / 2}
+                      y={(H - h) / 2}
+                      width={w}
+                      height={h}
+                    />
+                  );
+                })()}
             </Group>
           </Layer>
 
@@ -325,7 +354,7 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
                     y={analysis.center.y}
                     radius={Math.sqrt(
                       (analysis.divisionLines[0].x - analysis.center.x) ** 2 +
-                      (analysis.divisionLines[0].y - analysis.center.y) ** 2,
+                        (analysis.divisionLines[0].y - analysis.center.y) ** 2,
                     )}
                     stroke="#011f5f"
                     strokeWidth={1.5}
@@ -361,6 +390,210 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
                       fill="#011f5f"
                     />
                   ))}
+                </>
+              )}
+            </Group>
+          </Layer>
+
+          {/* ⬇⬇⬇ NEW: Devta mandala layer — 45 cells inside polygon */}
+          <Layer>
+            <Group
+              rotation={globalRotation}
+              offsetX={W / 2}
+              offsetY={H / 2}
+              x={W / 2}
+              y={H / 2}
+            >
+              {devtasVisible && analysis?.devtaMandala && (
+                <>
+                  {/* Outer 32 cells (Devtas 14..45) */}
+                  {analysis.devtaMandala.outer.map((cell) => (
+                    <Group
+                      key={`o-${cell.devtaNum}`}
+                      onMouseEnter={(e) => {
+                        const stage = e.target.getStage();
+                        if (stage) stage.container().style.cursor = "pointer";
+                        setHoveredDevta({
+                          x: cell.labelPos.x,
+                          y: cell.labelPos.y,
+                          name: cell.devtaName,
+                          num: cell.devtaNum,
+                        });
+                      }}
+                      onMouseLeave={(e) => {
+                        const stage = e.target.getStage();
+                        if (stage) stage.container().style.cursor = "default";
+                        setHoveredDevta(null);
+                      }}
+                    >
+                      <Line
+                        points={cell.points.flatMap((p) => [p.x, p.y])}
+                        closed
+                        stroke="#781B43"
+                        strokeWidth={0.6}
+                        fill="rgba(255,255,255,0.001)"
+                      />
+                      <Text
+                        x={cell.labelPos.x - 6}
+                        y={cell.labelPos.y - 5}
+                        text={String(cell.devtaNum)}
+                        fontSize={9}
+                        fontStyle="bold"
+                        fill="#5f0f01"
+                        listening={false}
+                      />
+                    </Group>
+                  ))}
+
+                  {/* Middle 8 corner cells (Devtas 6..13) */}
+                  {analysis.devtaMandala.middle.map((cell) => (
+                    <Group
+                      key={`m-${cell.devtaNum}`}
+                      onMouseEnter={(e) => {
+                        const stage = e.target.getStage();
+                        if (stage) stage.container().style.cursor = "pointer";
+                        setHoveredDevta({
+                          x: cell.labelPos.x,
+                          y: cell.labelPos.y,
+                          name: cell.devtaName,
+                          num: cell.devtaNum,
+                        });
+                      }}
+                      onMouseLeave={(e) => {
+                        const stage = e.target.getStage();
+                        if (stage) stage.container().style.cursor = "default";
+                        setHoveredDevta(null);
+                      }}
+                    >
+                      <Line
+                        points={cell.points.flatMap((p) => [p.x, p.y])}
+                        closed
+                        stroke="#011f5f"
+                        strokeWidth={0.8}
+                        fill="rgba(239,186,73,0.05)"
+                      />
+                      <Text
+                        x={cell.labelPos.x - 6}
+                        y={cell.labelPos.y - 6}
+                        text={String(cell.devtaNum)}
+                        fontSize={11}
+                        fontStyle="bold"
+                        fill="#011f5f"
+                        listening={false}
+                      />
+                    </Group>
+                  ))}
+
+                  {/* Inner 4 quadrant cells (Devtas 2..5) */}
+                  {analysis.devtaMandala.inner.map((cell) => (
+                    <Group
+                      key={`i-${cell.devtaNum}`}
+                      onMouseEnter={(e) => {
+                        const stage = e.target.getStage();
+                        if (stage) stage.container().style.cursor = "pointer";
+                        setHoveredDevta({
+                          x: cell.labelPos.x,
+                          y: cell.labelPos.y,
+                          name: cell.devtaName,
+                          num: cell.devtaNum,
+                        });
+                      }}
+                      onMouseLeave={(e) => {
+                        const stage = e.target.getStage();
+                        if (stage) stage.container().style.cursor = "default";
+                        setHoveredDevta(null);
+                      }}
+                    >
+                      <Line
+                        points={cell.points.flatMap((p) => [p.x, p.y])}
+                        closed
+                        stroke="#5f0f01"
+                        strokeWidth={1}
+                        fill="rgba(239,186,73,0.10)"
+                      />
+                      <Text
+                        x={cell.labelPos.x - 6}
+                        y={cell.labelPos.y - 7}
+                        text={String(cell.devtaNum)}
+                        fontSize={13}
+                        fontStyle="bold"
+                        fill="#5f0f01"
+                        listening={false}
+                      />
+                    </Group>
+                  ))}
+
+                  {/* Center cell — Brahma (#1) */}
+                  <Group
+                    onMouseEnter={(e) => {
+                      const stage = e.target.getStage();
+                      if (stage) stage.container().style.cursor = "pointer";
+                      setHoveredDevta({
+                        x: analysis?.devtaMandala?.center.labelPos.x ?? 0,
+                        y: analysis?.devtaMandala?.center.labelPos.y ?? 0,
+                        name: analysis?.devtaMandala?.center.devtaName ?? "",
+                        num: analysis?.devtaMandala?.center.devtaNum ?? 0,
+                      });
+                    }}
+                    onMouseLeave={(e) => {
+                      const stage = e.target.getStage();
+                      if (stage) stage.container().style.cursor = "default";
+                      setHoveredDevta(null);
+                    }}
+                  >
+                    <Line
+                      points={analysis.devtaMandala.center.points.flatMap(
+                        (p) => [p.x, p.y],
+                      )}
+                      closed
+                      stroke="#5f0f01"
+                      strokeWidth={1.2}
+                      fill="rgba(239,186,73,0.18)"
+                    />
+                    <Text
+                      x={analysis.devtaMandala.center.labelPos.x - 6}
+                      y={analysis.devtaMandala.center.labelPos.y - 8}
+                      text="1"
+                      fontSize={15}
+                      fontStyle="bold"
+                      fill="#5f0f01"
+                      listening={false}
+                    />
+                  </Group>
+
+                  {/* Tooltip — drawn on top of all cells in this layer */}
+                  {hoveredDevta &&
+                    (() => {
+                      const label = `${hoveredDevta.num}. ${hoveredDevta.name}`;
+                      // ~7px per char + 12px padding is good enough for our font
+                      const tw = label.length * 7 + 12;
+                      const th = 20;
+                      const tx = hoveredDevta.x + 12;
+                      const ty = hoveredDevta.y - 26;
+                      return (
+                        <Group listening={false}>
+                          <Rect
+                            x={tx}
+                            y={ty}
+                            width={tw}
+                            height={th}
+                            fill="#011f5f"
+                            cornerRadius={4}
+                            shadowColor="black"
+                            shadowBlur={4}
+                            shadowOpacity={0.25}
+                          />
+                          <Text
+                            x={tx + 6}
+                            y={ty + 4}
+                            text={label}
+                            fontSize={12}
+                            fontStyle="bold"
+                            fill="#fff"
+                          />
+                        </Group>
+                      );
+                    })()}
                 </>
               )}
             </Group>
