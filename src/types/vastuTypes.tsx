@@ -73,6 +73,7 @@ export interface CanvasAreaProps {
   division: number;
   degree: number;
   onPinsChange?: (pins: Pin[]) => void;
+  onDevtasChange?: (visible: boolean) => void;
 }
 
 export type TableRow = Record<string, unknown>;

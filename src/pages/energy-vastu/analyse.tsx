@@ -155,6 +155,7 @@ const EnergyVastuAnalyse = () => {
             division={division}
             degree={degree}
             onPinsChange={handlePinsChange}
+            onDevtasChange={setDevtasOn}   
           />
         </div>
       </article>

@@ -35,7 +35,7 @@ import {
 
 // ─── Component ───────────────────────────────────────────────────────────────
 const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
-  ({ mapUrl, tool, division, degree, onPinsChange }, ref) => {
+  ({ mapUrl, tool, division, degree, onPinsChange, onDevtasChange }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const stageRef = useRef<Konva.Stage>(null);
     const [bgImage] = useImage(mapUrl, "anonymous");
@@ -43,12 +43,7 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
     const [pins, setPins] = useState<Pin[]>([]);
     const [polygonDrawn, setPolygonDrawn] = useState(false);
     const [compassVisible, setCompassVisible] = useState(false);
-
-    // ⬇⬇⬇ NEW: Devtas overlay visibility (controlled by toolbar button)
     const [devtasVisible, setDevtasVisible] = useState(false);
-
-    // ⬇⬇⬇ CHANGE 2: store wallIndex (gate side) instead of compassRotation
-    // wallIndex = which polygon edge the gate is on. -1 = none chosen yet.
     const [wallIndex, setWallIndex] = useState<number>(-1);
 
     const [scale, setScale] = useState(1);
@@ -89,6 +84,14 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
       setPins(newPins);
     };
 
+    const setDevtasSync = useCallback(
+      (v: boolean) => {
+        setDevtasVisible(v);
+        onDevtasChange?.(v);
+      },
+      [onDevtasChange],
+    );
+
     const saveHistory = useCallback((newPins: Pin[], drawn: boolean) => {
       setHistory((prev) => [
         ...prev.slice(-9),
@@ -101,6 +104,12 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
       ref,
       () => ({
         undo() {
+          if (devtasVisible) {
+            setDevtasSync(false);  
+            setHoveredDevta(null);
+            return;
+          }
+
           setHistory((h) => {
             if (h.length <= 1) return h;
             const prev = h[h.length - 2];
@@ -115,8 +124,9 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
           pinsRef.current = [];
           setPolygonDrawn(false);
           setCompassVisible(false);
-          setDevtasVisible(false); // ⬅ NEW
-          setWallIndex(-1); // ⬅ CHANGE 3: reset gate side, not rotation
+          setDevtasSync(false);  
+          setHoveredDevta(null);
+          setWallIndex(-1);
           setScaleSync(1);
           setPositionSync({ x: 0, y: 0 });
           setHistory([{ pins: [], polygonDrawn: false }]);
@@ -148,9 +158,9 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
           if (!polygonDrawn) return;
           if (pinsRef.current.length < 3) return;
           setCompassVisible(true);
-          setDevtasVisible(true);
+          setDevtasSync(true);  
         },
-        hideDevtas: () => setDevtasVisible(false),
+        hideDevtas: () => setDevtasSync(false),
         isDevtasVisible: () => devtasVisible,
       }),
       [polygonDrawn, onPinsChange, devtasVisible],
@@ -395,7 +405,6 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
             </Group>
           </Layer>
 
-          {/* ⬇⬇⬇ NEW: Devta mandala layer — 45 cells inside polygon */}
           <Layer>
             <Group
               rotation={globalRotation}
@@ -565,7 +574,6 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
                   {hoveredDevta &&
                     (() => {
                       const label = `${hoveredDevta.num}. ${hoveredDevta.name}`;
-                      // ~7px per char + 12px padding is good enough for our font
                       const tw = label.length * 7 + 12;
                       const th = 20;
                       const tx = hoveredDevta.x + 12;
