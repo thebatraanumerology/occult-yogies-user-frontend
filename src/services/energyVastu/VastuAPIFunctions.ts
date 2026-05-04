@@ -1,16 +1,15 @@
-import axios from "axios";
+import axiosInstance from "../axiosInstance"; // Ensure this path correctly points to your axiosInstance.ts
 import { BaseURL } from "../../constants/BaseURL";
-import Cookies from "js-cookie";
 
-const token = Cookies.get("oy_token");
+/**
+ * NOTE: We removed 'const token = Cookies.get("oy_token")' from the top level.
+ * The axiosInstance interceptor now handles token injection dynamically.
+ */
 
 export const getVastuCategories = async () => {
   try {
-    const response = await axios.get(`${BaseURL}/energy-vastu/categories`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    // We use axiosInstance and a relative path because baseURL is already set in the instance
+    const response = await axiosInstance.get(`/energy-vastu/categories`);
     return response.data;
   } catch (error) {
     console.error(" Get Vastu Categories failed:", error);
@@ -48,20 +47,19 @@ export const postVastuAnalysis = async (data: any) => {
       formData.append("map_image", data.map);
     }
 
-    const response = await axios.post(
-      `${BaseURL}/energy-vastu/create`,
+    // Interceptor handles the token; we only need to specify the content-type here
+    const response = await axiosInstance.post(
+      `/energy-vastu/create`,
       formData,
       {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
         },
       }
     );
 
     return response.data;
   } catch (error: any) {
-    // Log full Laravel validation errors
     console.error("Validation errors:", error.response?.data);
     throw error;
   }
@@ -69,11 +67,7 @@ export const postVastuAnalysis = async (data: any) => {
 
 export const getVastuAnalysisByID = async (id: number) => {
   try {
-    const response = await axios.get(`${BaseURL}/energy-vastu/analyse/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axiosInstance.get(`/energy-vastu/analyse/${id}`);
     return response.data;
   } catch (error) {
     console.error("Get Vastu Analysis failed:", error);
@@ -83,12 +77,8 @@ export const getVastuAnalysisByID = async (id: number) => {
 
 export const getListData = async (page = 1) => {
   try {
-    const response = await axios.get(`${BaseURL}/energy-vastu/list?page=${page}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    console.log("list repornse datA:: ",response.data);
+    const response = await axiosInstance.get(`/energy-vastu/list?page=${page}`);
+    console.log("list response data: ", response.data);
     return response.data;
   } catch (error) {
     console.error("Get List Data failed:", error);
@@ -98,15 +88,10 @@ export const getListData = async (page = 1) => {
 
 export const deleteVastuAnalysisRecordByID = async (id: number) => {
   try {
-    const response = await axios.delete(`${BaseURL}/energy-vastu/delete/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axiosInstance.delete(`/energy-vastu/delete/${id}`);
     return response.data;
   } catch (error) {
     console.error("Delete Vastu Analysis failed:", error);
     throw error;
   }
 };
-
