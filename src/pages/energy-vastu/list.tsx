@@ -28,7 +28,6 @@ interface Pagination {
 }
 
 const EnergyVastuList = () => {
-  const handleExport = (type: string) => console.log("Export", type);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<TableRow[]>([]);
   const [pagination, setPagination] = useState<Pagination | null>(null);
@@ -114,7 +113,6 @@ const EnergyVastuList = () => {
         loading={loading}
         onView={handleView}
         onDelete={handleDelete}
-        onExport={handleExport}
       />
 
       {pagination && pagination.last_page > 1 && (

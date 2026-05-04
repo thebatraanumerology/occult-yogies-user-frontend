@@ -1,28 +1,12 @@
 import {
-  Copy,
-  FileText,
-  FileSpreadsheet,
-  FileDown,
-  Printer,
   Eye,
   Pencil,
   Trash2,
 } from "lucide-react";
-import { CustomTableProps, ExportType } from "../types/vastuTypes";
+import { CustomTableProps } from "../types/vastuTypes";
 import CustomTooltip from "./CustomTooltip";
 
-// ─── Button config ────────────────────────────────────────────────────────────
-const EXPORT_BUTTONS: {
-  label: string;
-  type: ExportType;
-  icon: React.ReactNode;
-}[] = [
-  { label: "Copy", type: "copy", icon: <Copy size={13} /> },
-  { label: "CSV", type: "csv", icon: <FileText size={13} /> },
-  { label: "Excel", type: "excel", icon: <FileSpreadsheet size={13} /> },
-  { label: "PDF", type: "pdf", icon: <FileDown size={13} /> },
-  { label: "Print", type: "print", icon: <Printer size={13} /> },
-];
+
 
 // ─── Vastu SVG icon ───────────────────────────────────────────────────────────
 const TableIcon: React.FC = () => (
@@ -110,14 +94,8 @@ const CustomTable: React.FC<CustomTableProps> = ({
   onView,
   onEdit,
   onDelete,
-  onExport,
   showActions = true,
 }) => {
-  const handleExport = (type: ExportType) => {
-    onExport
-      ? onExport(type)
-      : console.log(`Export as ${type} — wire onExport prop.`);
-  };
 
   const totalCols = 1 + columns.length + (showActions ? 1 : 0);
 
@@ -144,19 +122,6 @@ const CustomTable: React.FC<CustomTableProps> = ({
                 )}
               </h2>
             </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-1 text-magenta">
-            {EXPORT_BUTTONS.map((btn) => (
-              <button
-                key={btn.type}
-                onClick={() => handleExport(btn.type)}
-                className="flex items-center py-1 px-2 gap-1 rounded-md border text-xs font-medium transition-all duration-150 cursor-pointer select-none"
-              >
-                {btn.icon}
-                {btn.label}
-              </button>
-            ))}
           </div>
         </article>
 
