@@ -1,5 +1,4 @@
 import axiosInstance from "../axiosInstance"; // Ensure this path correctly points to your axiosInstance.ts
-import { BaseURL } from "../../constants/BaseURL";
 
 /**
  * NOTE: We removed 'const token = Cookies.get("oy_token")' from the top level.
@@ -20,7 +19,6 @@ export const getVastuCategories = async () => {
 export const postVastuAnalysis = async (data: any) => {
   try {
     const formData = new FormData();
-
     formData.append("full_name", data.fullName);
     formData.append("gender", data.gender.toLowerCase());
     formData.append("mobile_number", data.mobileNumber);
