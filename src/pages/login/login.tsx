@@ -24,9 +24,9 @@ const Login: React.FC = () => {
             />
           </svg>
 
-          <span>
-            Every flame tells a story. Every soul carries a question. At Occult Yogis, we blend ancient mysticism with modern guidance, helping you read the signs, decode the energies, and walk your path with purpose, peace, and power.
-          </span>
+          <p>
+             Every flame tells a story. Every soul carries a question. At Occult Yogis, we blend ancient mysticism with modern guidance, helping you read the signs, decode the energies, and walk your path with purpose, peace, and power.
+          </p>
         </div>
       </div>
 
