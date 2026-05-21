@@ -1,0 +1,16 @@
+<IfModule mod_mime.c>
+  AddType application/javascript .js
+</IfModule>
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  
+  # 1. If the request is for an actual file (like an image or JS file), serve it
+  RewriteCond %{REQUEST_FILENAME} !-f
+  
+  # 2. If the request is for an actual directory, serve it
+  RewriteCond %{REQUEST_FILENAME} !-d
+  
+  # 3. Otherwise, send the request to index.html so React Router can take over
+  RewriteRule . /index.html [L]
+</IfModule>
