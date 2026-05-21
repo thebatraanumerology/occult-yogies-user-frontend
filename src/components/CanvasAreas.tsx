@@ -65,6 +65,7 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
     const degreeRef = useRef(degree);
     divisionRef.current = division;
     degreeRef.current = degree;
+    const lastTapRef = useRef(0);
 
     const W = containerRef.current?.clientWidth ?? 800;
     const H = 600;
@@ -250,7 +251,11 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
 
     // ── Stage click → place pin ──────────────────────────────────────────────
     const handleStageClick = useCallback(
-      (e: Konva.KonvaEventObject<MouseEvent>) => {
+      (e: Konva.KonvaEventObject<MouseEvent | TouchEvent>) => {
+        const now = Date.now();
+        if (now - lastTapRef.current < 350) return; // ignore the echo click after a tap
+        lastTapRef.current = now;
+
         if (tool === "tool") {
           if (pins.length >= 3) {
             setPolygonDrawn(true);
@@ -393,6 +398,7 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
           draggable={tool === "move"}
           onClick={handleStageClick}
           onWheel={handleWheel}
+          onTap={handleStageClick}
           style={{
             cursor:
               tool === "move"
