@@ -25,10 +25,7 @@ const Login: React.FC = () => {
           </svg>
 
           <span>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book.
+            Every flame tells a story. Every soul carries a question. At Occult Yogis, we blend ancient mysticism with modern guidance, helping you read the signs, decode the energies, and walk your path with purpose, peace, and power.
           </span>
         </div>
       </div>

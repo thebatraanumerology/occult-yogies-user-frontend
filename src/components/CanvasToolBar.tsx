@@ -154,16 +154,15 @@ const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
         </article>
 
         <article className={`${navSection}`}>
-
-        <div className={`${navGroup}`}>
-             <button
+          {/* <div className={`${navGroup}`}>
+            <button
               className={`${btnBase} ${devtasActive ? active : inactive}`}
               onClick={() => onDevtasToggle?.()}
               title="Toggle 45-Devta Mandala (auto-switches to 32 divisions)"
             >
               <Star size={13} /> Devtas
             </button>
-          </div>
+          </div> */}
 
           {/* Gate select */}
           <select

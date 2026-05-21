@@ -32,6 +32,7 @@ import {
   Divisions,
   Point,
 } from "../utils/vastuEngine";
+import { jsPDF } from "jspdf";
 
 // ─── Component ───────────────────────────────────────────────────────────────
 const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
@@ -105,7 +106,7 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
       () => ({
         undo() {
           if (devtasVisible) {
-            setDevtasSync(false);  
+            setDevtasSync(false);
             setHoveredDevta(null);
             return;
           }
@@ -124,7 +125,7 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
           pinsRef.current = [];
           setPolygonDrawn(false);
           setCompassVisible(false);
-          setDevtasSync(false);  
+          setDevtasSync(false);
           setHoveredDevta(null);
           setWallIndex(-1);
           setScaleSync(1);
@@ -158,11 +159,92 @@ const CanvasArea = forwardRef<CanvasAreaHandle, CanvasAreaProps>(
           if (!polygonDrawn) return;
           if (pinsRef.current.length < 3) return;
           setCompassVisible(true);
-          setDevtasSync(true);  
+          setDevtasSync(true);
         },
+
         hideDevtas: () => setDevtasSync(false),
         isDevtasVisible: () => devtasVisible,
+
+        exportPDF: (filename = "vastu-analysis.pdf") => {
+          const stage = stageRef.current;
+          if (!stage) return;
+
+          // Remember what's currently on screen
+          const prevScale = { x: stage.scaleX(), y: stage.scaleY() };
+          const prevPos = { x: stage.x(), y: stage.y() };
+
+          // Go to a clean identity transform so measurements are in true coords
+          stage.scale({ x: 1, y: 1 });
+          stage.position({ x: 0, y: 0 });
+
+          // Measure the real bounds of EVERYTHING drawn — map + polygon + compass +
+          // devtas — even the parts currently sitting outside the visible canvas.
+          const box = stage.getClientRect({ skipTransform: false });
+          if (!box.width || !box.height) {
+            stage.scale(prevScale);
+            stage.position(prevPos);
+            return;
+          }
+
+          const sw = stage.width();
+          const sh = stage.height();
+          const pad = 24;
+
+          // Scale the whole drawing so it fits inside the canvas, then center it
+          const fit = Math.min(
+            (sw - pad * 2) / box.width,
+            (sh - pad * 2) / box.height,
+          );
+          stage.scale({ x: fit, y: fit });
+          stage.position({
+            x: -box.x * fit + (sw - box.width * fit) / 2,
+            y: -box.y * fit + (sh - box.height * fit) / 2,
+          });
+          stage.draw();
+
+          // Capture exactly the framed content (tight crop with a little padding)
+          const cw = box.width * fit + pad * 2;
+          const ch = box.height * fit + pad * 2;
+          const cx = (sw - cw) / 2;
+          const cy = (sh - ch) / 2;
+
+          const dataURL = stage.toDataURL({
+            x: cx,
+            y: cy,
+            width: cw,
+            height: ch,
+            pixelRatio: 2, // 2x for a crisp print
+            mimeType: "image/png",
+          });
+
+          // Put the on-screen view back exactly as it was
+          stage.scale(prevScale);
+          stage.position(prevPos);
+          stage.draw();
+
+          const pdf = new jsPDF({
+            orientation: cw >= ch ? "landscape" : "portrait",
+            unit: "px",
+            format: [cw, ch],
+          });
+          pdf.addImage(dataURL, "PNG", 0, 0, cw, ch);
+          // pdf.save(filename);
+
+          pdf.autoPrint();
+          window.open(pdf.output("bloburl"), "_blank");
+
+          // const blobUrl = pdf.output("bloburl");
+          // const iframe = document.createElement("iframe");
+          // iframe.style.display = "none";
+          // iframe.src = blobUrl as unknown as string;
+          // document.body.appendChild(iframe);
+          // iframe.onload = () => {
+          //   iframe.contentWindow?.focus();
+          //   iframe.contentWindow?.print();
+          // };
+        },
       }),
+
       [polygonDrawn, onPinsChange, devtasVisible],
     );
 

@@ -40,6 +40,7 @@ export interface CanvasAreaHandle {
   showDevtas: () => void;
   hideDevtas: () => void;
   isDevtasVisible: () => boolean;
+  exportPDF: (filename?: string) => void;
 }
 
 export interface Pin {

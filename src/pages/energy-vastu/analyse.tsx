@@ -155,8 +155,16 @@ const EnergyVastuAnalyse = () => {
             division={division}
             degree={degree}
             onPinsChange={handlePinsChange}
-            onDevtasChange={setDevtasOn}   
+            onDevtasChange={setDevtasOn}
           />
+          <div className="flex justify-center md:justify-end mt-2">
+            <button 
+              className="cursor-pointer text-white p-2 px-4 rounded-lg bg-magenta font-normal text-base hover:bg-magenta/50 transition-colors"
+              onClick={() => canvasRef.current?.exportPDF(`vastu-${userDetails?.full_name ?? "analysis"}.pdf`)}
+              >
+              Print
+            </button>
+          </div>
         </div>
       </article>
     </section>
