@@ -8,6 +8,8 @@ import DefaultLayout from "./layout/DefaultLayout";
 import EnergyVastuAnalyse from "./pages/energy-vastu/analyse";
 import EnergyVastuList from "./pages/energy-vastu/list";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ResetPassword from "./pages/login/resetPassword";
+
 
 const App: React.FC = () => {
   return (
@@ -15,6 +17,7 @@ const App: React.FC = () => {
       <Routes>
         <Route element={<LoginLayout />}>
           <Route path="/login" element={<Login />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Route>
 
         <Route element={<ProtectedRoute />}>

@@ -1,20 +1,20 @@
 import React from 'react'
-import { Puff } from 'react-loader-spinner'
+import { ThreeDots } from 'react-loader-spinner'
 import { CustomLoaderProps } from '../types/componentTypes'
 
-const CustomLoader: React.FC<CustomLoaderProps> = ({loading}) => {
-  return (
-    <div className="fixed inset-0 flex items-center justify-center">
-      <Puff
-        visible={loading}
-        height="100"
-        width="100"
-        color="var(--color-magenta)"
-        ariaLabel="puff-loading"
-        radius={200}
-      />
-    </div>
-  )
+const CustomLoader: React.FC<CustomLoaderProps> = ({ loading }) => {
+    return (
+        <div className="flex items-center justify-center">
+            <ThreeDots
+                visible={loading}
+                height="50"
+                width="50"
+                color="var(--color-magenta)"
+                ariaLabel="three-dots-loading"
+                radius={100}
+            />
+        </div>
+    )
 }
 
 export default CustomLoader;

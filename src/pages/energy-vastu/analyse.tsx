@@ -6,7 +6,7 @@ import CanvasToolbar from "@/src/components/CanvasToolBar";
 import CanvasArea, { Pin } from "@/src/components/CanvasAreas";
 import { useParams } from "react-router-dom";
 import { getVastuAnalysisByID } from "@/src/services/energyVastu/VastuAPIFunctions";
-import CustomLoader from "@/src/components/CustomLoader";
+import CustomPageLoader from "@/src/components/CustomPageLoader";
 
 const Field = ({ label, value }: { label: string; value?: string }) => (
   <div className="flex gap-1">
@@ -47,17 +47,17 @@ const EnergyVastuAnalyse = () => {
 
   const details = userDetails
     ? [
-        { label: "Full Name", value: userDetails.full_name },
-        { label: "Mobile No.", value: userDetails.mobile_number },
-        { label: "Category", value: userDetails.category },
-        {
-          label: "Date of Purchase",
-          value: userDetails.date_of_purchase
-            ? new Date(userDetails.date_of_purchase).toLocaleDateString("en-GB")
-            : "",
-        },
-        { label: "Address", value: userDetails.address },
-      ]
+      { label: "Full Name", value: userDetails.full_name },
+      { label: "Mobile No.", value: userDetails.mobile_number },
+      { label: "Category", value: userDetails.category },
+      {
+        label: "Date of Purchase",
+        value: userDetails.date_of_purchase
+          ? new Date(userDetails.date_of_purchase).toLocaleDateString("en-GB")
+          : "",
+      },
+      { label: "Address", value: userDetails.address },
+    ]
     : [];
 
   const mapUrl = userDetails?.map_image_url;
@@ -105,7 +105,7 @@ const EnergyVastuAnalyse = () => {
     canvasRef.current?.showDevtas();
   }, [devtasOn, division]);
 
-  if (loading) return <CustomLoader loading={loading} />;
+  if (loading) return <CustomPageLoader loading={loading} />;
 
   return (
     <section className="w-[80%] mx-auto">
@@ -158,10 +158,10 @@ const EnergyVastuAnalyse = () => {
             onDevtasChange={setDevtasOn}
           />
           <div className="flex justify-center md:justify-end mt-2">
-            <button 
+            <button
               className="cursor-pointer text-white p-2 px-4 rounded-lg bg-magenta font-normal text-base hover:bg-magenta/50 transition-colors"
               onClick={() => canvasRef.current?.exportPDF(`vastu-${userDetails?.full_name ?? "analysis"}.pdf`)}
-              >
+            >
               Print
             </button>
           </div>
