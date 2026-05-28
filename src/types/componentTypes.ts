@@ -78,6 +78,11 @@ export interface TooltipType {
   title: string;
   children: React.ReactNode;
 };
+
+export interface CustomPageLoaderProps {
+  loading: boolean;
+}
+
 export interface CustomLoaderProps {
   loading: boolean;
 }

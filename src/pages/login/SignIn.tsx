@@ -7,6 +7,7 @@ import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/src/context/AuthContext";
 import { doLogin } from "@/src/services/login/LoginAPIFunctions";
+import CustomLoader from "@/src/components/CustomLoader";
 
 const loginSchema = z.object({
   email: z.string().min(1, "Please enter a valid email address!").email("Please enter a valid email address!"),
@@ -116,7 +117,7 @@ const SignIn: React.FC<{ onForgotPassword: () => void }> = ({ onForgotPassword }
           disabled={submitting}
           className="w-full h-11 rounded-lg bg-bgYellow text-black font-semibold hover:bg-bgYellow/90 disabled:opacity-60"
         >
-          {submitting ? "Signing in…" : "Login Now"}
+          {submitting ? <CustomLoader loading={submitting} /> : "Login Now"}
         </button>
       </form>
     </div>
